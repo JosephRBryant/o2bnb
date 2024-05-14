@@ -3,7 +3,7 @@
 ## Database Schema Design
 
 ```
-Table users {
+Table Users {
   id integer pk
   firstName varchar
   lastName varchar
@@ -14,7 +14,7 @@ Table users {
   updatedAt date
 }
 
-Table spots {
+Table Spots {
   id integer pk
   ownerId integer
   address varchar
@@ -30,7 +30,7 @@ Table spots {
   updatedAt date
 }
 
-Table reviews {
+Table Reviews {
   id integer pk
   userId integer
   spotId integer
@@ -40,7 +40,7 @@ Table reviews {
   updatedAt date
 }
 
-Table bookings {
+Table Bookings {
   id integer pk
   userId integer
   spotId integer
@@ -50,32 +50,32 @@ Table bookings {
   updatedAt date
 }
 
-Table spotImages {
+Table SpotImages {
   id integer pk
   spotId integer
   preview boolean
   url url
 }
 
-Table reviewImages {
+Table ReviewImages {
   id integer pk
   reviewId integer
   url url
 }
 
-Ref: "users"."id" < "spots"."ownerId"
+Ref: "Users"."id" < "Spots"."ownerId"
 
-Ref: "spots"."id" < "reviews"."spotId"
+Ref: "Spots"."id" < "Reviews"."spotId"
 
-Ref: "spots"."id" < "bookings"."spotId"
+Ref: "Spots"."id" < "Bookings"."spotId"
 
-Ref: "spots"."id" < "spotImages"."spotId"
+Ref: "Spots"."id" < "SpotImages"."spotId"
 
-Ref: "reviews"."id" < "reviewImages"."reviewId"
+Ref: "Reviews"."id" < "ReviewImages"."reviewId"
 
-Ref: "users"."id" < "reviews"."userId"
+Ref: "Users"."id" < "Reviews"."userId"
 
-Ref: "users"."id" < "bookings"."userId"
+Ref: "Users"."id" < "Bookings"."userId"
 ```
 
 ![alt text](images/dbDiagram.png)
