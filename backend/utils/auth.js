@@ -12,7 +12,6 @@ const setTokenCookie = (res, user) => {
     email: user.email,
     username: user.username,
   };
-  console.log('expiresIn log....', expiresIn);
   const token = jwt.sign(
     { data: safeUser },
     secret,
