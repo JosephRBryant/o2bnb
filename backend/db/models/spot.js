@@ -129,9 +129,10 @@ module.exports = (sequelize, DataTypes) => {
             throw new Error('Name must be letters')
           }
         },
-        len: {
-          arg: [3, 49],
-          msg: 'Name must be less than 50 characters'
+        isLessThan(value) {
+          if (value.length >= 50) {
+            throw new Error('Name must be less than 50 characters')
+          }
         }
       }
     },
