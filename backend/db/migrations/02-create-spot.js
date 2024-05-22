@@ -49,9 +49,6 @@ module.exports = {
         type: Sequelize.DECIMAL(2,6),
         allowNull: false
       },
-      avgRating: {
-        type: Sequelize.DECIMAL(1,2)
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

@@ -26,9 +26,10 @@ module.exports = (sequelize, DataTypes) => {
           arg: true,
           msg: 'Street address is required'
         },
-        isAlpha: {
-          arg: true,
-          msg: 'Street address must be letters'
+        isString(value) {
+          if (typeof value !== 'string') {
+            throw new Error('Street address must be letters')
+          }
         },
         len: [5, 50]
       }
@@ -41,9 +42,10 @@ module.exports = (sequelize, DataTypes) => {
           arg: true,
           msg: 'City is required'
         },
-        isAlpha: {
-          arg: true,
-          msg: 'City must be letters'
+        isString(value) {
+          if (typeof value !== 'string') {
+            throw new Error('City must be letters')
+          }
         },
         len: [3, 30]
       }
@@ -56,9 +58,10 @@ module.exports = (sequelize, DataTypes) => {
           arg: true,
           msg: 'State is required'
         },
-        isAlpha: {
-          arg: true,
-          msg: 'State must be letters'
+        isString(value) {
+          if (typeof value !== 'string') {
+            throw new Error('State must be letters')
+          }
         },
         len: [3, 20]
       }
@@ -71,9 +74,10 @@ module.exports = (sequelize, DataTypes) => {
           arg: true,
           msg: 'Country is required'
         },
-        isAlpha: {
-          arg: true,
-          msg: 'Country must be letters'
+        isString(value) {
+          if (typeof value !== 'string') {
+            throw new Error('Country must be letters')
+          }
         },
         len: [3, 20]
       }
@@ -114,9 +118,10 @@ module.exports = (sequelize, DataTypes) => {
           arg: true,
           msg: 'Name is required'
         },
-        isAlpha: {
-          arg: true,
-          msg: 'Name must be letters'
+        isString(value) {
+          if (typeof value !== 'string') {
+            throw new Error('Name must be letters')
+          }
         },
         len: {
           arg: [3, 49],
@@ -132,9 +137,10 @@ module.exports = (sequelize, DataTypes) => {
           arg: true,
           msg: 'Description is required'
         },
-        isAlpha: {
-          arg: true,
-          msg: 'Description must be letters'
+        isString(value) {
+          if (typeof value !== 'string') {
+            throw new Error('Description must be letters')
+          }
         },
         len: {
           arg: [10, 240],
@@ -155,10 +161,6 @@ module.exports = (sequelize, DataTypes) => {
           msg: 'Price is not valid'
         }
       }
-    },
-    avgRating: {
-      type: DataTypes.DECIMAL(1,2),
-      allowNull: false
     }
   }, {
     sequelize,
