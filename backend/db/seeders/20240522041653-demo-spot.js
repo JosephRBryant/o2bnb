@@ -25,41 +25,42 @@ module.exports = {
           description: 'Brand new digs for fun times for all',
           price: 400
         },
-        // {
-        //   ownerId: 2,
-        //   address: '224 Sandlewood Ln',
-        //   city: 'Byler',
-        //   state: 'Texas',
-        //   country: 'United States',
-        //   lat: 67.7645358,
-        //   lng: 102.4730327,
-        //   name: 'Mi Casa Bryiantant',
-        //   description: 'Brand Brand new digs for fun times for all',
-        //   price: 200
-        // },
-        // {
-        //   ownerId: 3,
-        //   address: '324 Sandlewood Ln',
-        //   city: 'Skyler',
-        //   state: 'Texas',
-        //   country: 'United States',
-        //   lat: 77.7645358,
-        //   lng: -127.4730327,
-        //   name: 'Mi Casa Brrrrryant',
-        //   description: 'Brand new new digs for fun times for all',
-        //   price: 300
-        // }
+        {
+          ownerId: 2,
+          address: '224 Sandlewood Ln',
+          city: 'Byler',
+          state: 'Texas',
+          country: 'United States',
+          lat: 67.7645358,
+          lng: 102.4730327,
+          name: 'Mi Casa Bryiantant',
+          description: 'Brand Brand new digs for fun times for all',
+          price: 200
+        },
+        {
+          ownerId: 3,
+          address: '324 Sandlewood Ln',
+          city: 'Skyler',
+          state: 'Texas',
+          country: 'United States',
+          lat: 77.7645358,
+          lng: -127.4730327,
+          name: 'Mi Casa Brrrrryant',
+          description: 'Brand new new digs for fun times for all',
+          price: 300
+        }
       ], { validate: true })
     } catch(error) {
-      throw Error;
+      throw new Error('Error on the Spots seeder');
     }
   },
 
   async down (queryInterface, Sequelize) {
     options.tableName = 'Spots';
-    const Op = Sequelize.Op;
+    let spots = await Spot.findAll();
+
     return queryInterface.bulkDelete(options, {
-      username: { [Op.in]: ['Demo_Spot_1', 'Demo_Spot_2', 'Demo_Spot_3']}
+      where: { ...spots }
     }, {});
   }
 };
