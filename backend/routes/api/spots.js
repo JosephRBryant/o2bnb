@@ -18,10 +18,19 @@ router.get('/', async (req, res, next) => {
 })
 
 router.post('/', async (req, res, next) => {
-  const { ownerId, address, city, state, country, lat, lng, name, description, price } = req.body;
-  const spot = await Spot.create({ ownerId, address, city, state, country, lat, lng, name, description, price });
+  try {
+    const { user } = req;
+    if (user) {
+      const { address, city, state, country, lat, lng, name, description, price } = req.body;
+      const spot = await Spot.create({ ownerId: user.id, address, city, state, country, lat, lng, name, description, price });
 
-  return res.json(spot);
+      return res.json(spot);
+    } else {
+      throw new Error('User must be logged in to create spot!')
+    }
+  } catch(error) {
+    next(error)
+  }
 })
 
 module.exports = router;

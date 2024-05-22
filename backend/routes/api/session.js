@@ -70,6 +70,7 @@ router.get(
   '/',
   (req, res) => {
     const { user } = req;
+    console.log('user', user, typeof user);
     if (user) {
       const safeUser = {
         id: user.id,

@@ -90,9 +90,12 @@ module.exports = (sequelize, DataTypes) => {
           arg: true,
           msg: 'Latitude is required'
         },
-        isDecimal: {
-          arg: true,
-          msg: 'Latitude is not valid'
+        isValidDecimal(value) {
+          let numString = JSON.stringify(value);
+          let numArr = numString.split('.');
+          if (numArr[0].length >= 4 || numArr[1].length !== 7) {
+            throw new Error('Latitude is not valid')
+          }
         }
       }
     },
@@ -104,9 +107,12 @@ module.exports = (sequelize, DataTypes) => {
           arg: true,
           msg: 'Longitude is required'
         },
-        isDecimal: {
-          arg: true,
-          msg: 'Longitude is not valid'
+        isValidDecimal(value) {
+          let numString = JSON.stringify(value);
+          let numArr = numString.split('.');
+          if (numArr[0].length >= 4 || numArr[1].length !== 7) {
+            throw new Error('Longitude is not valid')
+          }
         }
       }
     },
