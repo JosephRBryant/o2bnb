@@ -3,6 +3,7 @@ const { handleValidationErrors } = require('../../utils/validation');
 const { requireAuth } = require('../../utils/auth');
 const { Spot, SpotImage } = require('../../db/models');
 const { ValidationError } = require('sequelize');
+const { reconstructFieldPath } = require('express-validator/src/field-selection');
 
 const router = express.Router();
 
@@ -70,7 +71,7 @@ router.post('/', requireAuth, async (req, res, next) => {
   } catch(error) {
     next(error)
   }
-})
+});
 
 // Add image to spot by spotId
 router.post('/:spotId/images', handleValidationErrors, requireAuth, async (req, res) => {
@@ -110,6 +111,49 @@ router.post('/:spotId/images', handleValidationErrors, requireAuth, async (req, 
   } catch (error) {
     error.status = 404;
     console.error("Error adding image to spot:", error);
+    throw error;
+  }
+});
+
+// Delete spot by spotId
+router.delete('/:spotId', handleValidationErrors, requireAuth, async (req, res) => {
+  try {
+    let { user } = req;
+    let spotId = req.params.spotId;
+    spotId = Number(spotId);
+
+    // does spot exist
+    let spotExists = await Spot.findByPk(spotId);
+    if (!spotExists) {
+      throw new ValidationError("Spot couldn't be found")
+    }
+
+    // find user spots
+    let userSpots = await Spot.findAll({
+      where: {
+        ownerId: user.id
+      }
+    });
+
+    // does the spot belong to the user
+    let isUserSpot = false;
+    userSpots.forEach((spot) => {
+      if (spot.id === spotId) {
+        isUserSpot = true;
+      }
+    });
+    
+    // if spot belongs to user delete spot entry
+    if (isUserSpot) {
+      const deletedSpot = await Spot.findByPk(spotId);
+      await deletedSpot.destroy();
+      return res.json({ message: 'Successfully deleted' });
+    } else {
+      throw new ValidationError('Current user does not own spot')
+    }
+  } catch (error) {
+    error.status = 404;
+    console.error("Error deleting spot by spotId:", error);
     throw error;
   }
 })
