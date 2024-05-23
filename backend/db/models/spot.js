@@ -1,7 +1,6 @@
 'use strict';
 const {
-  Model,
-  ValidationError
+  Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Spot extends Model {
@@ -11,14 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Spot.belongsTo(
-        models.User,
-        {foreignKey: 'ownerId'}
-      ),
-      Spot.hasMany(
-        models.SpotImage,
-        {foreignKey: 'spotId'}
-      )
+      // define association here
     }
   }
   Spot.init({
@@ -36,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         isString(value) {
           if (typeof value !== 'string') {
-            throw new ValidationError('Street address must be letters')
+            throw new Error('Street address must be letters')
           }
         },
         len: [5, 50]
@@ -101,7 +93,7 @@ module.exports = (sequelize, DataTypes) => {
         isValidDecimal(value) {
           let numString = JSON.stringify(value);
           let numArr = numString.split('.');
-          if (numArr[0].length >= 5 || numArr[1].length !== 7) {
+          if (numArr[0].length >= 4 || numArr[1].length !== 7) {
             throw new Error('Latitude is not valid')
           }
         }
@@ -118,7 +110,7 @@ module.exports = (sequelize, DataTypes) => {
         isValidDecimal(value) {
           let numString = JSON.stringify(value);
           let numArr = numString.split('.');
-          if (numArr[0].length >= 5 || numArr[1].length !== 7) {
+          if (numArr[0].length >= 4 || numArr[1].length !== 7) {
             throw new Error('Longitude is not valid')
           }
         }

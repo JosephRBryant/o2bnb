@@ -20,7 +20,6 @@ const validateLogin = [
   handleValidationErrors
 ];
 
-// Log in user
 router.post(
   '/',
   validateLogin,
@@ -59,7 +58,6 @@ router.post(
   }
 );
 
-// Log out user
 router.delete(
   '/',
   (_req, res) => {
@@ -68,11 +66,11 @@ router.delete(
   }
 );
 
-// Get current user
 router.get(
   '/',
   (req, res) => {
     const { user } = req;
+    console.log('user', user, typeof user);
     if (user) {
       const safeUser = {
         id: user.id,
