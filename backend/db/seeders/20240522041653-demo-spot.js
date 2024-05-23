@@ -48,10 +48,23 @@ module.exports = {
           name: 'Mi Casa Brrrrryant',
           description: 'Brand new new digs for fun times for all',
           price: 300
+        },
+        {
+          ownerId: 1,
+          address: '32 Sandood Ln',
+          city: 'Sler',
+          state: 'Texas',
+          country: 'United States',
+          lat: 44.7645358,
+          lng: -177.4730327,
+          name: 'Brrrrryant',
+          description: 'Brand fun times for all',
+          price: 300
         }
       ], { validate: true })
     } catch(error) {
-      throw new Error('Error on the Spots seeder');
+      console.error('Error duing seeding spots: ', error);
+      throw error;
     }
   },
 
