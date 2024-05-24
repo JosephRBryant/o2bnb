@@ -31,14 +31,17 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         notNull: {
           arg: true,
-          msg: 'Review is required'
+          msg: 'Review text is required'
         },
         isString(value) {
           if (typeof value !== 'string') {
             throw new ValidationError('Review must be in letters')
           }
         },
-        len: [5, 240]
+        len: {
+          args: [5, 240],
+          msg: 'Review length must be from 5 to 240 characters'
+        }
       }
     },
     stars: {
@@ -46,11 +49,16 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notNull: {
-          arg: true,
           msg: 'Star rating is required'
         },
-        min: 1,
-        max: 5
+        min: {
+          args: 1,
+          msg: 'Stars must be an integer from 1 to 5'
+        },
+        max: {
+          args: 5,
+          msg: 'Stars must be an integer from 1 to 5'
+        }
       }
     }
   }, {
