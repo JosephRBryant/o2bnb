@@ -6,7 +6,6 @@ if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;
 }
 
-
 const { now } = require('sequelize/lib/utils');
 
 /** @type {import('sequelize-cli').Migration} */
@@ -19,11 +18,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      username: {
-        type: Sequelize.STRING(30),
-        allowNull: false,
-        unique: true
-      },
       firstName: {
         type: Sequelize.STRING(),
         allowNull: false
@@ -32,14 +26,19 @@ module.exports = {
         type: Sequelize.STRING(),
         allowNull: false
       },
-      email: {
-        type: Sequelize.STRING(256),
+      username: {
+        type: Sequelize.STRING(30),
         allowNull: false,
         unique: true
       },
       hashedPassword: {
         type: Sequelize.STRING.BINARY,
         allowNull: false
+      },
+      email: {
+        type: Sequelize.STRING(256),
+        allowNull: false,
+        unique: true
       },
       createdAt: {
         allowNull: false,
