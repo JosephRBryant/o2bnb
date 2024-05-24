@@ -115,6 +115,60 @@ router.post('/:spotId/images', handleValidationErrors, requireAuth, async (req, 
   }
 });
 
+// Edit spot by spotId
+router.put('/:spotId', handleValidationErrors, requireAuth, async (req, res) => {
+  try {
+    let { user } = req;
+    const { address, city, state, country, lat, lng, name, description, price } = req.body;
+    let spotId = req.params.spotId;
+    spotId = Number(spotId);
+
+    // does spot exist
+    let spotExists = await Spot.findByPk(spotId);
+    if (!spotExists) {
+      throw new ValidationError("Spot couldn't be found")
+    }
+
+    // find user spots
+    let userSpots = await Spot.findAll({
+      where: {
+        ownerId: user.id
+      }
+    });
+
+    // does the spot belong to the user
+    let isUserSpot = false;
+    userSpots.forEach((spot) => {
+      if (spot.id === spotId) {
+        isUserSpot = true;
+      }
+    });
+
+    // if spot belongs to user update spot with req body
+    if (isUserSpot) {
+      const updatedSpot = await Spot.findByPk(spotId);
+      updatedSpot.set({
+        address,
+        city,
+        state, country,
+        lat,
+        lng,
+        name,
+        description,
+        price
+      })
+      await updatedSpot.save();
+      res.json(updatedSpot);
+    } else {
+      throw new ValidationError('Current user does not own spot')
+    }
+  } catch (error) {
+    error.status = 400;
+    console.error("Error deleting spot by spotId:", error);
+    throw error;
+  }
+})
+
 // Delete spot by spotId
 router.delete('/:spotId', handleValidationErrors, requireAuth, async (req, res) => {
   try {
@@ -142,7 +196,7 @@ router.delete('/:spotId', handleValidationErrors, requireAuth, async (req, res) 
         isUserSpot = true;
       }
     });
-    
+
     // if spot belongs to user delete spot entry
     if (isUserSpot) {
       const deletedSpot = await Spot.findByPk(spotId);
