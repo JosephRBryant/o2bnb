@@ -24,26 +24,6 @@ module.exports = (sequelize, DataTypes) => {
       autoIncrement: true,
       allowNull: false
     },
-    username: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: {
-        arg: true,
-        msg: 'User with that username already exists'
-      },
-      validate: {
-        len: [4,30],
-        notNull: {
-          arg: true,
-          msg: 'Username is required'
-        },
-        isNotEmail(value) {
-          if (Validator.isEmail(value)) {
-            throw new Error('Cannot be an email.')
-          }
-        }
-      }
-    },
     firstName: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -64,6 +44,33 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
+    username: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: {
+        arg: true,
+        msg: 'User with that username already exists'
+      },
+      validate: {
+        len: [4,30],
+        notNull: {
+          arg: true,
+          msg: 'Username is required'
+        },
+        isNotEmail(value) {
+          if (Validator.isEmail(value)) {
+            throw new Error('Cannot be an email.')
+          }
+        }
+      }
+    },
+    hashedPassword: {
+      type: DataTypes.STRING.BINARY,
+      allowNull: false,
+      validate: {
+        len: [60,60]
+      }
+    },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -74,13 +81,6 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         isEmail: true,
         len: [3,256]
-      }
-    },
-    hashedPassword: {
-      type: DataTypes.STRING.BINARY,
-      allowNull: false,
-      validate: {
-        len: [60,60]
       }
     }
   }, {

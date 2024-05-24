@@ -1,9 +1,11 @@
 const express = require('express');
+const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const { requireAuth } = require('../../utils/auth');
-const { Spot, SpotImage } = require('../../db/models');
+const { Spot, SpotImage, Review, User, ReviewImage } = require('../../db/models');
 const { ValidationError } = require('sequelize');
 const { reconstructFieldPath } = require('express-validator/src/field-selection');
+const spot = require('../../db/models/spot');
 
 const router = express.Router();
 
@@ -52,6 +54,92 @@ router.get('/:id', async (req, res, next) => {
     }
   } catch (error) {
     error.status = 404;
+    next(error)
+  }
+})
+
+// Get all reviews by spotId, /:spotId/reviews
+router.get('/:spotId/reviews', handleValidationErrors, async (req, res, next) => {
+  try {
+    let { user } = req;
+    let spotId = req.params.spotId;
+    spotId = Number(spotId);
+    const spotReviews = await Review.findAll({
+      where: {
+        spotId: spotId
+      },
+      include: [
+        {model: User, attributes: ['id', 'firstName', 'lastName']},
+        // {model: ReviewImage, attributes: ['id', 'url']}
+      ]
+    });
+
+
+    res.json({Reviews: spotReviews});
+  } catch (error) {
+    error.status = 404;
+    next(error)
+  }
+})
+
+// Create review for spot by spotId, /:spotId/reviews
+router.post('/:spotId/reviews', handleValidationErrors, requireAuth, async (req, res, next) => {
+  try {
+    let spotId = req.params.spotId;
+    spotId = Number(spotId);
+    const { user } = req;
+
+    // get user reviews
+    let userReviews = await Review.findAll({
+      where: {
+        userId: user.id,
+        spotId: spotId
+      }
+    })
+
+    if (userReviews.length > 0) {
+      return res.status(500).json({message: "User already has a review for this spot"})
+    }
+
+    // does the  belong to the user
+    let isUserReview = false;
+    userReviews.forEach((review) => {
+      if (review.id === reviewId) {
+        isUserReview = true;
+      }
+    });
+
+    // does spot exist
+    let spotExists = await Spot.findByPk(spotId);
+    if (!spotExists) {
+      return res.status(404).json({ message: "Spot couldn't be found"})
+    }
+
+    // find user spots
+    let userSpots = await Spot.findAll({
+      where: {
+        ownerId: user.id
+      }
+    });
+
+    // if spot belongs to user, user can't review spot
+    let isUserSpot = false;
+    userSpots.forEach((spot) => {
+      if (spot.id === spotId) {
+        isUserSpot = true;
+      }
+    });
+
+    if (user) {
+      const { review, stars } = req.body;
+      if (isUserSpot) {
+        throw new ValidationError('User cannot review their own spots')
+      }
+      const newReview = await Review.create({ spotId, userId: user.id, review, stars });
+      return res.status(201).json(newReview);
+    }
+  } catch(error) {
+    error.status = 400;
     next(error)
   }
 })
