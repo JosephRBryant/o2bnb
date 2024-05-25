@@ -5,13 +5,19 @@ const { requireAuth } = require('../../utils/auth');
 const { Spot, SpotImage, Review, User, ReviewImage } = require('../../db/models');
 const { ValidationError } = require('sequelize');
 const { reconstructFieldPath } = require('express-validator/src/field-selection');
-const spot = require('../../db/models/spot');
 
 const router = express.Router();
 
 // Get all spots
 router.get('/', async (_req, res, next) => {
   try {
+    // find previewImage
+    // const previewImage = await Spot.getSpotImages({
+    //   where: {
+
+    //   }
+    // })
+
     const spots = await Spot.findAll();
     if(!spots || spots.length === 0) {
       throw new ValidationError('Could not get spots');

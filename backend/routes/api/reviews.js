@@ -1,7 +1,7 @@
 const express = require('express');
 const { handleValidationErrors } = require('../../utils/validation');
 const { requireAuth } = require('../../utils/auth');
-const { Review, ReviewImage } = require('../../db/models');
+const { Review, ReviewImage, User, Spot, SpotImage } = require('../../db/models');
 const { ValidationError } = require('sequelize');
 
 const router = express.Router();
@@ -10,15 +10,24 @@ const router = express.Router();
 router.get('/current', requireAuth, async (req, res, next) => {
   try {
     let { user } = req;
+
+    // get spot preview image
+    
+
     const reviews = await Review.findAll({
       where: {
         userId: user.id
-      }
+      },
+      include: [
+        {model: User, attributes: ['id', 'firstName', 'lastName']},
+        {model: Spot, attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng', 'name', 'price', previewImage]},
+        {model: ReviewImage, attributes: ['id', 'url']}
+      ]
     })
     if (!reviews || reviews.length === 0) {
       throw new ValidationError('Current user has no reviews')
     } else {
-      res.json(reviews)
+      res.json({Reviews: reviews})
     }
   } catch (error) {
     next(error)
@@ -69,7 +78,7 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
 
       return res.json({"id": image.id, "url": image.url})
     } else {
-      throw new ValidationError('Current user does not own review')
+      return res.status(500).json({message: 'Current user does not own review'});
     }
 
   } catch (error) {
