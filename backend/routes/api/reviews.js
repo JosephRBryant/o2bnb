@@ -36,7 +36,7 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
     // does review exist
     let reviewExists = await Review.findByPk(reviewId);
     if (!reviewExists) {
-      throw new ValidationError("Review couldn't be found")
+      return res.status(404).json({message: "Review couldn't be found"})
     }
 
     // find user reviews
@@ -54,9 +54,20 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
       }
     });
 
+    // check review image count, max 10 per review
+    let imageCount = await ReviewImage.count({
+      where: {
+        reviewId: reviewId
+      }
+    })
+    if (imageCount > 9) {
+      return res.status(403).json({message: "Maximum number of images for this resource was reached"})
+    }
+
     if (isUserReview) {
       const image = await ReviewImage.create({reviewId, url});
-      return res.json(image)
+
+      return res.json({"id": image.id, "url": image.url})
     } else {
       throw new ValidationError('Current user does not own review')
     }
