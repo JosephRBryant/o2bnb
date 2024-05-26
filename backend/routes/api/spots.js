@@ -5,24 +5,65 @@ const { requireAuth } = require('../../utils/auth');
 const { Spot, SpotImage, Review, User, ReviewImage } = require('../../db/models');
 const { ValidationError } = require('sequelize');
 const { reconstructFieldPath } = require('express-validator/src/field-selection');
+const { sign } = require('jsonwebtoken');
 
 const router = express.Router();
 
 // Get all spots
 router.get('/', async (_req, res, next) => {
   try {
-    // find previewImage
-    // const previewImage = await Spot.getSpotImages({
-    //   where: {
+    console.log('...............trying to test a thing................')
 
-    //   }
-    // })
+    let spotData = await Spot.findAll({
+      include: [
+        {model: Review},
+        {model: SpotImage}
+      ]
+    });
 
-    const spots = await Spot.findAll();
+    let spots = [];
+    spotData.forEach(spot => {
+
+      // get average rating
+      let sum = 0;
+      let count = spot.Reviews.length;
+      spot.Reviews.forEach(review => {
+        sum += review.stars
+      })
+      let avg = sum / count
+
+      // get preview image
+      let prevImgUrl;
+      spot.SpotImages.forEach(image => {
+        if (image.preview) {
+          prevImgUrl = image.url;
+        }
+      })
+
+      // build response
+      spots.push({
+        id: spot.id,
+        ownerId: spot.ownerId,
+        address: spot.address,
+        city: spot.city,
+        state: spot.state,
+        country: spot.country,
+        lat: spot.lat,
+        lng: spot.lng,
+        name: spot.name,
+        description: spot.description,
+        price: spot.price,
+        createdAt: spot.createdAt,
+        updatedAt: spot.updatedAt,
+        avgRating: avg || 0,
+        previewImage: prevImgUrl || 'No Image'
+      })
+    })
+
     if(!spots || spots.length === 0) {
-      throw new ValidationError('Could not get spots');
+      res.status(404).json({message: 'There are no spots'})
     }
-    res.json(spots);
+    res.json({"Spots": spots});
   } catch(error) {
     next(error)
   }
@@ -32,16 +73,58 @@ router.get('/', async (_req, res, next) => {
 router.get('/current', requireAuth, async (req, res, next) => {
   try {
     let { user } = req;
-    const spots = await Spot.findAll({
-      where: {
-        ownerId: user.id
-      }
+    let spotData = await Spot.findAll({
+      where: {ownerId: user.id},
+      include: [
+        {model: Review},
+        {model: SpotImage}
+      ]
     });
-    if (!spots || spots.length === 0) {
-      throw new ValidationError('Current user has no spots')
-    } else {
-      res.json(spots);
+
+    let spots = [];
+    spotData.forEach(spot => {
+
+      // get average rating
+      let sum = 0;
+      let count = spot.Reviews.length;
+      spot.Reviews.forEach(review => {
+        sum += review.stars
+      })
+      let avg = sum / count
+
+      // get preview image
+      let prevImgUrl;
+      spot.SpotImages.forEach(image => {
+        console.log('image obj', image.dataValues.preview)
+        if (image.preview) {
+          prevImgUrl = image.url;
+        }
+      })
+
+      // build response
+      spots.push({
+        id: spot.id,
+        ownerId: spot.ownerId,
+        address: spot.address,
+        city: spot.city,
+        state: spot.state,
+        country: spot.country,
+        lat: spot.lat,
+        lng: spot.lng,
+        name: spot.name,
+        description: spot.description,
+        price: spot.price,
+        createdAt: spot.createdAt,
+        updatedAt: spot.updatedAt,
+        avgRating: avg || 0,
+        previewImage: prevImgUrl || 'No Image'
+      })
+    })
+
+    if(!spots || spots.length === 0) {
+      res.status(404).json({message: 'User owns no spots'});
     }
+    res.json({"Spots": spots});
   } catch (error) {
     error.status = 404;
     next(error)
@@ -56,7 +139,7 @@ router.get('/:id', async (req, res, next) => {
     if (spotDetails) {
       res.json(spotDetails)
     } else {
-      throw new ValidationError('Could not get spot by spotId');
+      res.status(404).json({message: 'Could not get spot by spotId'});
     }
   } catch (error) {
     error.status = 404;
@@ -178,7 +261,7 @@ router.post('/:spotId/images', handleValidationErrors, requireAuth, async (req, 
     // does spot exist
     let spotExists = await Spot.findByPk(spotId);
     if (!spotExists) {
-      throw new ValidationError("Spot couldn't be found")
+      res.status(404).json({"message": "Spot couldn't be found"})
     }
 
     // find user spots
@@ -197,8 +280,30 @@ router.post('/:spotId/images', handleValidationErrors, requireAuth, async (req, 
     });
 
     if (isUserSpot) {
+      // // if preview image check for other preview images and set to false
+      // if (preview) {
+      //   let spotData = await Spot.findAll({
+      //     include: {model: SpotImage}
+      //   });
+
+      //   spotData.forEach(spot => {
+      //     // get preview image
+      //     spot.SpotImages.forEach(image => {
+      //       console.log('image obj', image.preview)
+      //       if (image.preview) {
+      //         image.preview = false;
+      //       }
+      //     })
+      //   })
+      // };
+
       const image = await SpotImage.create({spotId, url, preview});
-      return res.json(image)
+      const imageRes = {
+        id: image.id,
+        url: image.url,
+        preview: image.preview
+      }
+      return res.json(imageRes)
     } else {
       throw new ValidationError('Current user does not own spot')
     }
