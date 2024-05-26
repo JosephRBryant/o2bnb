@@ -12,7 +12,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
     let { user } = req;
 
     // get spot preview image
-    
+
 
     const reviews = await Review.findAll({
       where: {
@@ -144,7 +144,7 @@ router.delete('/:reviewId', handleValidationErrors, requireAuth, async (req, res
     // does review exist
     let reviewExists = await Review.findByPk(reviewId);
     if (!reviewExists) {
-      throw new ValidationError("Review couldn't be found")
+      res.status(404).json({message: "Review couldn't be found"})
     }
 
     // find user reviews
@@ -168,7 +168,7 @@ router.delete('/:reviewId', handleValidationErrors, requireAuth, async (req, res
       await deletedReview.destroy();
       return res.json({ message: 'Successfully deleted' });
     } else {
-      throw new ValidationError('Current user does not own review')
+      return res.status(500).json({ message: "Current user does not own review"})
     }
   } catch (error) {
     error.status = 404;
