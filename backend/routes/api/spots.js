@@ -313,23 +313,6 @@ router.post('/:spotId/images', handleValidationErrors, requireAuth, async (req, 
     });
 
     if (isUserSpot) {
-      // // if preview image check for other preview images and set to false
-      // if (preview) {
-      //   let spotData = await Spot.findAll({
-      //     include: {model: SpotImage}
-      //   });
-
-      //   spotData.forEach(spot => {
-      //     // get preview image
-      //     spot.SpotImages.forEach(image => {
-      //       console.log('image obj', image.preview)
-      //       if (image.preview) {
-      //         image.preview = false;
-      //       }
-      //     })
-      //   })
-      // };
-
       const image = await SpotImage.create({spotId, url, preview});
       const imageRes = {
         id: image.id,
@@ -358,6 +341,7 @@ router.put('/:spotId', handleValidationErrors, requireAuth, async (req, res) => 
     // does spot exist
     let spotExists = await Spot.findByPk(spotId);
     if (!spotExists) {
+      res.status(404).json({message: "Spot couldn't be found"})
       throw new ValidationError("Spot couldn't be found")
     }
 
