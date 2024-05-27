@@ -11,22 +11,38 @@ router.get('/current', requireAuth, async (req, res, next) => {
   try {
     let { user } = req;
 
-    // get spot preview image
-
-
+    // Initial Response build
     const reviews = await Review.findAll({
       where: {
         userId: user.id
       },
       include: [
         {model: User, attributes: ['id', 'firstName', 'lastName']},
-        {model: Spot, attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng', 'name', 'price', previewImage]},
+        {model: Spot, attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng', 'name', 'price']},
         {model: ReviewImage, attributes: ['id', 'url']}
       ]
     })
+
+    // Get all spot images
+    const spotImages = await SpotImage.findAll()
+    // For each review get spotId
+    // For each spot image if spotId match and prev img is true
+      // add previewImage and url to associated Spot
     if (!reviews || reviews.length === 0) {
       throw new ValidationError('Current user has no reviews')
     } else {
+      reviews.forEach(review => {
+        let spotId = review.spotId;
+        spotImages.forEach(image => {
+          if (image.spotId === spotId && image.preview) {
+            return review.Spot.dataValues.previewImage = image.url;
+          }
+        })
+        // If spot preview is false add previewImage and No preview message to spot
+        if (!review.Spot.dataValues.previewImage) {
+          return review.Spot.dataValues.previewImage = "No preview image";
+        }
+      })
       res.json({Reviews: reviews})
     }
   } catch (error) {
