@@ -13,7 +13,8 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Spot.belongsTo(
         models.User,
-        {foreignKey: 'ownerId'}
+        {as: 'Owner'},
+        {foreignKey: 'ownerId', onDelete: 'CASCADE'}
       ),
       Spot.hasMany(
         models.SpotImage,
@@ -91,7 +92,7 @@ module.exports = (sequelize, DataTypes) => {
             throw new Error('Country must be letters')
           }
         },
-        len: [3, 20]
+        len: [3, 50]
       }
     },
     lat: {
@@ -175,9 +176,17 @@ module.exports = (sequelize, DataTypes) => {
           arg: true,
           msg: 'Price per day is required'
         },
-        isDecimal: {
-          arg: true,
-          msg: 'Price is not valid'
+        isValidDecimal(value) {
+          if (typeof value !== 'number') {
+            throw new Error('Price per day is required')
+          }
+          let numString = JSON.stringify(value);
+          if (numString.includes('.')) {
+            let numArr = numString.split('.');
+            if (numArr[0].length >= 5 || numArr[1].length !== 2) {
+              throw new Error('Price per day is required')
+            }
+          }
         }
       }
     }

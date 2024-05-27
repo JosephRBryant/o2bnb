@@ -12,8 +12,6 @@ const router = express.Router();
 // Get all spots
 router.get('/', async (_req, res, next) => {
   try {
-    console.log('...............trying to test a thing................')
-
     let spotData = await Spot.findAll({
       include: [
         {model: Review},
@@ -134,13 +132,48 @@ router.get('/current', requireAuth, async (req, res, next) => {
 // Get spot by spotId
 router.get('/:id', async (req, res, next) => {
   try {
+
+    // Get spot and all associations
     let id = req.params.id;
-    let spotDetails = await Spot.findByPk(id);
-    if (spotDetails) {
-      res.json(spotDetails)
-    } else {
+
+    // does spot exist
+    let spotExists = await Spot.findByPk(id);
+    if (!spotExists) {
+      return res.status(404).json({ message: "Spot couldn't be found"})
+    }
+    let spotData = await Spot.findOne({
+      where: { id: id },
+      include: [
+        { model: SpotImage,
+          attributes: ['id', 'url', 'preview']
+        },
+        { model: User,
+          as: 'Owner',
+          attributes: ['id','firstName','lastName']
+        }
+      ]
+    });
+    let spotReviews = await Review.findAll({
+      where: {
+        spotId: id
+      }
+    })
+
+     // get average rating
+     let sum = 0;
+     let count = spotReviews.length;
+     spotReviews.forEach(review => {
+       sum += review.stars
+     })
+     let avg = sum / count;
+
+    spotData.dataValues.numReviews = count || 0;
+    spotData.dataValues.avgStarRating = avg || 0;
+
+    if (!spotData) {
       res.status(404).json({message: 'Could not get spot by spotId'});
     }
+    res.json(spotData)
   } catch (error) {
     error.status = 404;
     next(error)
@@ -280,23 +313,6 @@ router.post('/:spotId/images', handleValidationErrors, requireAuth, async (req, 
     });
 
     if (isUserSpot) {
-      // // if preview image check for other preview images and set to false
-      // if (preview) {
-      //   let spotData = await Spot.findAll({
-      //     include: {model: SpotImage}
-      //   });
-
-      //   spotData.forEach(spot => {
-      //     // get preview image
-      //     spot.SpotImages.forEach(image => {
-      //       console.log('image obj', image.preview)
-      //       if (image.preview) {
-      //         image.preview = false;
-      //       }
-      //     })
-      //   })
-      // };
-
       const image = await SpotImage.create({spotId, url, preview});
       const imageRes = {
         id: image.id,
@@ -325,6 +341,7 @@ router.put('/:spotId', handleValidationErrors, requireAuth, async (req, res) => 
     // does spot exist
     let spotExists = await Spot.findByPk(spotId);
     if (!spotExists) {
+      res.status(404).json({message: "Spot couldn't be found"})
       throw new ValidationError("Spot couldn't be found")
     }
 
