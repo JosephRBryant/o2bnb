@@ -29,7 +29,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
     // For each spot image if spotId match and prev img is true
       // add previewImage and url to associated Spot
     if (!reviews || reviews.length === 0) {
-      throw new ValidationError('Current user has no reviews')
+      res.status(404).json({message: 'Current user has no reviews'})
     } else {
       reviews.forEach(review => {
         // format dates

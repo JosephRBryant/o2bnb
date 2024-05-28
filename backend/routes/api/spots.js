@@ -242,7 +242,7 @@ router.get('/:spotId/reviews', handleValidationErrors, async (req, res, next) =>
 })
 
 // Create review for spot by spotId, /:spotId/reviews
-router.post('/:spotId/reviews', handleValidationErrors, requireAuth, async (req, res, next) => {
+router.post('/:spotId/reviews', requireAuth, handleValidationErrors, async (req, res, next) => {
   try {
     let spotId = req.params.spotId;
     spotId = Number(spotId);
@@ -306,7 +306,7 @@ router.post('/:spotId/reviews', handleValidationErrors, requireAuth, async (req,
 })
 
 // Create new spot
-router.post('/', requireAuth, async (req, res, next) => {
+router.post('/', requireAuth, handleValidationErrors, async (req, res, next) => {
   try {
     const { user } = req;
     if (user) {
@@ -318,7 +318,7 @@ router.post('/', requireAuth, async (req, res, next) => {
 
       return res.json(spot);
     } else {
-      throw new Error('User must be logged in to create spot!')
+      res.status(400).json({message: 'User must be logged in to create spot!'})
     }
   } catch(error) {
     next(error)
