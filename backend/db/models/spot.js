@@ -91,7 +91,7 @@ module.exports = (sequelize, DataTypes) => {
             throw new Error('Country must be letters')
           }
         },
-        len: [3, 20]
+        len: [3, 50]
       }
     },
     lat: {
