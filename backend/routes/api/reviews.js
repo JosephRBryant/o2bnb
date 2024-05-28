@@ -32,6 +32,10 @@ router.get('/current', requireAuth, async (req, res, next) => {
       throw new ValidationError('Current user has no reviews')
     } else {
       reviews.forEach(review => {
+        // format dates
+        review.dataValues.createdAt = review.dataValues.createdAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0];
+        review.dataValues.updatedAt = review.dataValues.updatedAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0];
+
         let spotId = review.spotId;
         spotImages.forEach(image => {
           if (image.spotId === spotId && image.preview) {
@@ -43,6 +47,9 @@ router.get('/current', requireAuth, async (req, res, next) => {
           return review.Spot.dataValues.previewImage = "No preview image";
         }
       })
+
+
+
       res.json({Reviews: reviews})
     }
   } catch (error) {
@@ -140,6 +147,8 @@ router.put('/:reviewId', requireAuth, handleValidationErrors, async (req, res, n
         stars
       })
       await updatedReview.save();
+      updatedReview.dataValues.createdAt = updatedReview.dataValues.createdAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0];
+        updatedReview.dataValues.updatedAt = updatedReview.dataValues.updatedAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0];
       res.json(updatedReview);
     } else {
       throw new ValidationError('Current user does not own review')

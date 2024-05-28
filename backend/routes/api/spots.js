@@ -32,6 +32,11 @@ router.get('/', async (_req, res, next) => {
       })
       let avg = sum / count
 
+      //If avg is more than one decimal long
+      if (JSON.stringify(avg).split('.').length === 2) {
+        avg = avg.toFixed(1);
+        avg = Number(avg);
+      }
       // get preview image
       let prevImgUrl;
       spot.SpotImages.forEach(image => {
@@ -53,8 +58,8 @@ router.get('/', async (_req, res, next) => {
         name: spot.name,
         description: spot.description,
         price: spot.price,
-        createdAt: spot.createdAt,
-        updatedAt: spot.updatedAt,
+        createdAt: spot.createdAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0],
+        updatedAt: spot.updatedAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0],
         avgRating: avg || 0,
         previewImage: prevImgUrl || 'No Image'
       })
@@ -92,6 +97,12 @@ router.get('/current', requireAuth, async (req, res, next) => {
       })
       let avg = sum / count
 
+      //If avg is more than one decimal long
+      if (JSON.stringify(avg).split('.').length === 2) {
+        avg = avg.toFixed(1);
+        avg = Number(avg);
+      }
+
       // get preview image
       let prevImgUrl;
       spot.SpotImages.forEach(image => {
@@ -114,8 +125,8 @@ router.get('/current', requireAuth, async (req, res, next) => {
         name: spot.name,
         description: spot.description,
         price: spot.price,
-        createdAt: spot.createdAt,
-        updatedAt: spot.updatedAt,
+        createdAt: spot.createdAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0],
+        updatedAt: spot.updatedAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0],
         avgRating: avg || 0,
         previewImage: prevImgUrl || 'No Image'
       })
@@ -135,12 +146,65 @@ router.get('/current', requireAuth, async (req, res, next) => {
 router.get('/:id', async (req, res, next) => {
   try {
     let id = req.params.id;
-    let spotDetails = await Spot.findByPk(id);
-    if (spotDetails) {
-      res.json(spotDetails)
+    let { user } = req;
+
+    let spotData = await Spot.findOne({
+      where: {ownerId: user.id},
+      include: [
+        {model: SpotImage, attributes: ['id', 'url', 'preview']}
+      ]
+    });
+
+    let spots = [];
+
+    // get reviews for spot for average
+    let reviews = await Review.findAll({
+      where: {
+        spotId: id
+      }
+    })
+
+    // get average rating
+    let sum = 0;
+    let count = reviews.length;
+    reviews.forEach(review => {
+      sum += review.stars
+    })
+    let avg = sum / count
+
+    //If avg is more than one decimal long
+    if (JSON.stringify(avg).split('.').length === 2) {
+      avg = avg.toFixed(1);
+      avg = Number(avg);
+    }
+
+    // build response
+    spots.push({
+      id: spotData.id,
+      ownerId: spotData.ownerId,
+      address: spotData.address,
+      city: spotData.city,
+      state: spotData.state,
+      country: spotData.country,
+      lat: spotData.lat,
+      lng: spotData.lng,
+      name: spotData.name,
+      description: spotData.description,
+      price: spotData.price,
+      createdAt: spotData.createdAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0],
+      updatedAt: spotData.updatedAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0],
+      avgRating: avg || 0
+    })
+
+
+    if (spotData) {
+      spotData.dataValues.createdAt = spotData.dataValues.createdAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0];
+      spotData.dataValues.updatedAt = spotData.dataValues.updatedAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0];
+      res.json(spotData)
     } else {
       res.status(404).json({message: 'Could not get spot by spotId'});
     }
+
   } catch (error) {
     error.status = 404;
     next(error)
@@ -159,9 +223,15 @@ router.get('/:spotId/reviews', handleValidationErrors, async (req, res, next) =>
       },
       include: [
         {model: User, attributes: ['id', 'firstName', 'lastName']},
-        // {model: ReviewImage, attributes: ['id', 'url']}
+        {model: ReviewImage, attributes: ['id', 'url']}
       ]
     });
+
+    // format dates
+    spotReviews.forEach(review => {
+      review.dataValues.createdAt = review.dataValues.createdAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0];
+      review.dataValues.updatedAt = review.dataValues.updatedAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0];
+    })
 
 
     res.json({Reviews: spotReviews});
@@ -225,6 +295,8 @@ router.post('/:spotId/reviews', handleValidationErrors, requireAuth, async (req,
         throw new ValidationError('User cannot review their own spots')
       }
       const newReview = await Review.create({ spotId, userId: user.id, review, stars });
+      newReview.dataValues.createdAt = newReview.dataValues.createdAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0];
+      newReview.dataValues.updatedAt = newReview.dataValues.updatedAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0];
       return res.status(201).json(newReview);
     }
   } catch(error) {
@@ -240,6 +312,9 @@ router.post('/', requireAuth, async (req, res, next) => {
     if (user) {
       const { address, city, state, country, lat, lng, name, description, price } = req.body;
       const spot = await Spot.create({ ownerId: user.id, address, city, state, country, lat, lng, name, description, price });
+
+      spot.dataValues.createdAt = spot.dataValues.createdAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0];
+      spot.dataValues.updatedAt = spot.dataValues.updatedAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0];
 
       return res.json(spot);
     } else {
@@ -280,23 +355,6 @@ router.post('/:spotId/images', handleValidationErrors, requireAuth, async (req, 
     });
 
     if (isUserSpot) {
-      // // if preview image check for other preview images and set to false
-      // if (preview) {
-      //   let spotData = await Spot.findAll({
-      //     include: {model: SpotImage}
-      //   });
-
-      //   spotData.forEach(spot => {
-      //     // get preview image
-      //     spot.SpotImages.forEach(image => {
-      //       console.log('image obj', image.preview)
-      //       if (image.preview) {
-      //         image.preview = false;
-      //       }
-      //     })
-      //   })
-      // };
-
       const image = await SpotImage.create({spotId, url, preview});
       const imageRes = {
         id: image.id,
@@ -357,6 +415,8 @@ router.put('/:spotId', handleValidationErrors, requireAuth, async (req, res) => 
         price
       })
       await updatedSpot.save();
+      updatedSpot.dataValues.createdAt = updatedSpot.dataValues.createdAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0];
+      updatedSpot.dataValues.updatedAt = updatedSpot.dataValues.updatedAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0];
       res.json(updatedSpot);
     } else {
       throw new ValidationError('Current user does not own spot')
