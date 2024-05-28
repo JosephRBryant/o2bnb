@@ -122,7 +122,7 @@ router.put('/:reviewId', requireAuth, handleValidationErrors, async (req, res, n
     // does review exist
     let reviewExists = await Review.findByPk(reviewId);
     if (!reviewExists) {
-      throw new ValidationError("Review couldn't be found")
+      res.status(404).json({message: "Review couldn't be found"})
     }
 
     // find user reviews
@@ -148,7 +148,7 @@ router.put('/:reviewId', requireAuth, handleValidationErrors, async (req, res, n
       })
       await updatedReview.save();
       updatedReview.dataValues.createdAt = updatedReview.dataValues.createdAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0];
-        updatedReview.dataValues.updatedAt = updatedReview.dataValues.updatedAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0];
+      updatedReview.dataValues.updatedAt = updatedReview.dataValues.updatedAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0];
       res.json(updatedReview);
     } else {
       throw new ValidationError('Current user does not own review')

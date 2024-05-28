@@ -12,8 +12,6 @@ const router = express.Router();
 // Get all spots
 router.get('/', async (_req, res, next) => {
   try {
-    console.log('...............trying to test a thing................')
-
     let spotData = await Spot.findAll({
       include: [
         {model: Review},
