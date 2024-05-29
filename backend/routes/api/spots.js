@@ -143,66 +143,49 @@ router.get('/current', requireAuth, async (req, res, next) => {
 // Get spot by spotId
 router.get('/:id', async (req, res, next) => {
   try {
-    let id = req.params.id;
-    let { user } = req;
 
+    // Get spot and all associations
+    let id = req.params.id;
+
+    // does spot exist
+    let spotExists = await Spot.findByPk(id);
+    if (!spotExists) {
+      return res.status(404).json({ message: "Spot couldn't be found"})
+    }
     let spotData = await Spot.findOne({
-      where: {ownerId: user.id},
+      where: { id: id },
       include: [
-        {model: SpotImage, attributes: ['id', 'url', 'preview']}
+        { model: SpotImage,
+          attributes: ['id', 'url', 'preview']
+        },
+        { model: User,
+          as: 'Owner',
+          attributes: ['id','firstName','lastName']
+        }
       ]
     });
-
-    let spots = [];
-
-    // get reviews for spot for average
-    let reviews = await Review.findAll({
+    let spotReviews = await Review.findAll({
       where: {
         spotId: id
       }
     })
 
-    // get average rating
-    let sum = 0;
-    let count = reviews.length;
-    reviews.forEach(review => {
-      sum += review.stars
-    })
-    let avg = sum / count
+     // get average rating
+     let sum = 0;
+     let count = spotReviews.length;
+     spotReviews.forEach(review => {
+       sum += review.stars
+     })
+     let avg = sum / count;
+     avg = Number(avg.toFixed(1));
 
-    //If avg is more than one decimal long
-    if (JSON.stringify(avg).split('.').length === 2) {
-      avg = avg.toFixed(1);
-      avg = Number(avg);
-    }
+    spotData.dataValues.numReviews = count || 0;
+    spotData.dataValues.avgStarRating = avg || 0;
 
-    // build response
-    spots.push({
-      id: spotData.id,
-      ownerId: spotData.ownerId,
-      address: spotData.address,
-      city: spotData.city,
-      state: spotData.state,
-      country: spotData.country,
-      lat: spotData.lat,
-      lng: spotData.lng,
-      name: spotData.name,
-      description: spotData.description,
-      price: spotData.price,
-      createdAt: spotData.createdAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0],
-      updatedAt: spotData.updatedAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0],
-      avgRating: avg || 0
-    })
-
-
-    if (spotData) {
-      spotData.dataValues.createdAt = spotData.dataValues.createdAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0];
-      spotData.dataValues.updatedAt = spotData.dataValues.updatedAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0];
-      res.json(spotData)
-    } else {
+    if (!spotData) {
       res.status(404).json({message: 'Could not get spot by spotId'});
     }
-
+    res.json(spotData)
   } catch (error) {
     error.status = 404;
     next(error)
