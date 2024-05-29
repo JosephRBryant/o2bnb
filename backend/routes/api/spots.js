@@ -320,6 +320,7 @@ router.post('/:spotId/images', handleValidationErrors, requireAuth, async (req, 
         url: image.url,
         preview: image.preview
       }
+      
       return res.json(imageRes)
     } else {
       throw new ValidationError('Current user does not own spot')
