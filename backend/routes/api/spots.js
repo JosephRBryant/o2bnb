@@ -342,6 +342,27 @@ router.post('/:spotId/images', handleValidationErrors, requireAuth, async (req, 
         url: image.url,
         preview: image.preview
       }
+
+
+      // is image a preview
+      if (image.preview === true) {
+        // get spot images by user
+        let spotImagePreview = await SpotImage.findOne({
+          where: {
+            preview: true
+          }
+        })
+        let preview = false;
+
+        if (spotImagePreview) {
+          spotImagePreview.set({
+            preview
+          });
+          spotImagePreview.save();
+        }
+
+      }
+
       return res.json(imageRes)
     } else {
       throw new ValidationError('Current user does not own spot')
