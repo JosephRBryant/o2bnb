@@ -166,6 +166,7 @@ router.get('/:id', async (req, res, next) => {
        sum += review.stars
      })
      let avg = sum / count;
+     avg = Number(avg.toFixed(1));
 
     spotData.dataValues.numReviews = count || 0;
     spotData.dataValues.avgStarRating = avg || 0;
