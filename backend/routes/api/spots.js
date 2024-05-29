@@ -30,6 +30,11 @@ router.get('/', async (_req, res, next) => {
       })
       let avg = sum / count
 
+      //If avg is more than one decimal long
+      if (JSON.stringify(avg).split('.').length === 2) {
+        avg = avg.toFixed(1);
+        avg = Number(avg);
+      }
       // get preview image
       let prevImgUrl;
       spot.SpotImages.forEach(image => {
@@ -51,8 +56,8 @@ router.get('/', async (_req, res, next) => {
         name: spot.name,
         description: spot.description,
         price: spot.price,
-        createdAt: spot.createdAt,
-        updatedAt: spot.updatedAt,
+        createdAt: spot.createdAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0],
+        updatedAt: spot.updatedAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0],
         avgRating: avg || 0,
         previewImage: prevImgUrl || 'No Image'
       })
@@ -90,6 +95,12 @@ router.get('/current', requireAuth, async (req, res, next) => {
       })
       let avg = sum / count
 
+      //If avg is more than one decimal long
+      if (JSON.stringify(avg).split('.').length === 2) {
+        avg = avg.toFixed(1);
+        avg = Number(avg);
+      }
+
       // get preview image
       let prevImgUrl;
       spot.SpotImages.forEach(image => {
@@ -112,8 +123,8 @@ router.get('/current', requireAuth, async (req, res, next) => {
         name: spot.name,
         description: spot.description,
         price: spot.price,
-        createdAt: spot.createdAt,
-        updatedAt: spot.updatedAt,
+        createdAt: spot.createdAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0],
+        updatedAt: spot.updatedAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0],
         avgRating: avg || 0,
         previewImage: prevImgUrl || 'No Image'
       })
@@ -193,9 +204,15 @@ router.get('/:spotId/reviews', handleValidationErrors, async (req, res, next) =>
       },
       include: [
         {model: User, attributes: ['id', 'firstName', 'lastName']},
-        // {model: ReviewImage, attributes: ['id', 'url']}
+        {model: ReviewImage, attributes: ['id', 'url']}
       ]
     });
+
+    // format dates
+    spotReviews.forEach(review => {
+      review.dataValues.createdAt = review.dataValues.createdAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0];
+      review.dataValues.updatedAt = review.dataValues.updatedAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0];
+    })
 
 
     res.json({Reviews: spotReviews});
@@ -206,7 +223,7 @@ router.get('/:spotId/reviews', handleValidationErrors, async (req, res, next) =>
 })
 
 // Create review for spot by spotId, /:spotId/reviews
-router.post('/:spotId/reviews', handleValidationErrors, requireAuth, async (req, res, next) => {
+router.post('/:spotId/reviews', requireAuth, handleValidationErrors, async (req, res, next) => {
   try {
     let spotId = req.params.spotId;
     spotId = Number(spotId);
@@ -259,6 +276,8 @@ router.post('/:spotId/reviews', handleValidationErrors, requireAuth, async (req,
         throw new ValidationError('User cannot review their own spots')
       }
       const newReview = await Review.create({ spotId, userId: user.id, review, stars });
+      newReview.dataValues.createdAt = newReview.dataValues.createdAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0];
+      newReview.dataValues.updatedAt = newReview.dataValues.updatedAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0];
       return res.status(201).json(newReview);
     }
   } catch(error) {
@@ -268,16 +287,19 @@ router.post('/:spotId/reviews', handleValidationErrors, requireAuth, async (req,
 })
 
 // Create new spot
-router.post('/', requireAuth, async (req, res, next) => {
+router.post('/', requireAuth, handleValidationErrors, async (req, res, next) => {
   try {
     const { user } = req;
     if (user) {
       const { address, city, state, country, lat, lng, name, description, price } = req.body;
       const spot = await Spot.create({ ownerId: user.id, address, city, state, country, lat, lng, name, description, price });
 
+      spot.dataValues.createdAt = spot.dataValues.createdAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0];
+      spot.dataValues.updatedAt = spot.dataValues.updatedAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0];
+
       return res.json(spot);
     } else {
-      throw new Error('User must be logged in to create spot!')
+      res.status(400).json({message: 'User must be logged in to create spot!'})
     }
   } catch(error) {
     next(error)
@@ -376,6 +398,8 @@ router.put('/:spotId', handleValidationErrors, requireAuth, async (req, res) => 
         price
       })
       await updatedSpot.save();
+      updatedSpot.dataValues.createdAt = updatedSpot.dataValues.createdAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0];
+      updatedSpot.dataValues.updatedAt = updatedSpot.dataValues.updatedAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0];
       res.json(updatedSpot);
     } else {
       throw new ValidationError('Current user does not own spot')

@@ -11,22 +11,45 @@ router.get('/current', requireAuth, async (req, res, next) => {
   try {
     let { user } = req;
 
-    // get spot preview image
-
-
+    // Initial Response build
     const reviews = await Review.findAll({
       where: {
         userId: user.id
       },
       include: [
         {model: User, attributes: ['id', 'firstName', 'lastName']},
-        {model: Spot, attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng', 'name', 'price', previewImage]},
+        {model: Spot, attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng', 'name', 'price']},
         {model: ReviewImage, attributes: ['id', 'url']}
       ]
     })
+
+    // Get all spot images
+    const spotImages = await SpotImage.findAll()
+    // For each review get spotId
+    // For each spot image if spotId match and prev img is true
+      // add previewImage and url to associated Spot
     if (!reviews || reviews.length === 0) {
-      throw new ValidationError('Current user has no reviews')
+      res.status(404).json({message: 'Current user has no reviews'})
     } else {
+      reviews.forEach(review => {
+        // format dates
+        review.dataValues.createdAt = review.dataValues.createdAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0];
+        review.dataValues.updatedAt = review.dataValues.updatedAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0];
+
+        let spotId = review.spotId;
+        spotImages.forEach(image => {
+          if (image.spotId === spotId && image.preview) {
+            return review.Spot.dataValues.previewImage = image.url;
+          }
+        })
+        // If spot preview is false add previewImage and No preview message to spot
+        if (!review.Spot.dataValues.previewImage) {
+          return review.Spot.dataValues.previewImage = "No preview image";
+        }
+      })
+
+
+
       res.json({Reviews: reviews})
     }
   } catch (error) {
@@ -99,7 +122,7 @@ router.put('/:reviewId', requireAuth, handleValidationErrors, async (req, res, n
     // does review exist
     let reviewExists = await Review.findByPk(reviewId);
     if (!reviewExists) {
-      throw new ValidationError("Review couldn't be found")
+      res.status(404).json({message: "Review couldn't be found"})
     }
 
     // find user reviews
@@ -124,6 +147,8 @@ router.put('/:reviewId', requireAuth, handleValidationErrors, async (req, res, n
         stars
       })
       await updatedReview.save();
+      updatedReview.dataValues.createdAt = updatedReview.dataValues.createdAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0];
+      updatedReview.dataValues.updatedAt = updatedReview.dataValues.updatedAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0];
       res.json(updatedReview);
     } else {
       throw new ValidationError('Current user does not own review')
