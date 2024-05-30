@@ -3,6 +3,7 @@ const { handleValidationErrors } = require('../../utils/validation');
 const { requireAuth } = require('../../utils/auth');
 const { Review, ReviewImage, User, Spot, SpotImage } = require('../../db/models');
 const { ValidationError } = require('sequelize');
+const { formatDateTime } = require('../../helper-functions/date-formatter')
 
 const router = express.Router();
 
@@ -33,8 +34,8 @@ router.get('/current', requireAuth, async (req, res, next) => {
     } else {
       reviews.forEach(review => {
         // format dates
-        review.dataValues.createdAt = review.dataValues.createdAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0];
-        review.dataValues.updatedAt = review.dataValues.updatedAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0];
+        // review.dataValues.createdAt = review.dataValues.createdAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0];
+        // review.dataValues.updatedAt = review.dataValues.updatedAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0];
 
         let spotId = review.spotId;
         spotImages.forEach(image => {
@@ -141,14 +142,16 @@ router.put('/:reviewId', requireAuth, handleValidationErrors, async (req, res, n
     })
 
     if (isUserReview) {
-      const updatedReview = await Review.findByPk(reviewId);
+      let updatedReview = await Review.findByPk(reviewId);
       updatedReview.set({
         review,
         stars
       })
       await updatedReview.save();
-      updatedReview.dataValues.createdAt = updatedReview.dataValues.createdAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0];
-      updatedReview.dataValues.updatedAt = updatedReview.dataValues.updatedAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0];
+      updatedReview = updatedReview.toJSON();
+      updatedReview.createdAt = formatDateTime(updatedReview.createdAt);
+      updatedReview.updatedAt = formatDateTime(updatedReview.updatedAt);
+
       res.json(updatedReview);
     } else {
       throw new ValidationError('Current user does not own review')
