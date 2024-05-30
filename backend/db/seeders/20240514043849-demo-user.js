@@ -12,29 +12,33 @@ if (process.env.NODE_ENV === 'production') {
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-   await User.bulkCreate([
-    {
-      email: 'demo@user.io',
-      username: 'Demo-lition',
-      firstName: 'Mike',
-      lastName: 'Andowsky',
-      hashedPassword: bcrypt.hashSync('password')
-    },
-    {
-      email: 'user1@user.io',
-      username: 'FakeUser1',
-      firstName: 'Anthony',
-      lastName: 'Weiner',
-      hashedPassword: bcrypt.hashSync('password2')
-    },
-    {
-      email: 'user2@user.io',
-      username: 'FakeUser2',
-      firstName: 'Judas',
-      lastName: 'Prast',
-      hashedPassword: bcrypt.hashSync('password3')
+    try {
+      await User.bulkCreate([
+       {
+         firstName: 'Mike',
+         lastName: 'Andowsky',
+         username: 'Demo-lition',
+         hashedPassword: bcrypt.hashSync('password'),
+         email: 'demo@user.io'
+       },
+       {
+         firstName: 'Anthony',
+         lastName: 'Weiner',
+         username: 'FakeUser1',
+         hashedPassword: bcrypt.hashSync('password2'),
+         email: 'user1@user.io'
+       },
+       {
+         firstName: 'Judas',
+         lastName: 'Prast',
+         username: 'FakeUser2',
+         hashedPassword: bcrypt.hashSync('password3'),
+         email: 'user2@user.io'
+       }
+     ], { validate: true })
+    } catch(error) {
+      throw new Error('Error in the Users seeder')
     }
-  ], { validate: true })
   },
 
   async down (queryInterface, Sequelize) {

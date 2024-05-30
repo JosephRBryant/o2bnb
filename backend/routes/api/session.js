@@ -13,13 +13,14 @@ const validateLogin = [
   check('credential')
     .exists({ checkFalsy: true })
     .notEmpty()
-    .withMessage('Please provide a valid email or username.'),
+    .withMessage('Email or username is required'),
   check('password')
     .exists({ checkFalsy: true })
     .withMessage('Please provide a password.'),
   handleValidationErrors
 ];
 
+// Logging in user
 router.post(
   '/',
   validateLogin,
@@ -36,19 +37,18 @@ router.post(
     });
 
     if (!user || !bcrypt.compareSync(password, user.hashedPassword.toString())) {
-      const err = new Error('Login failed');
+      const err = new Error('Invalid credentials');
       err.status = 401;
       err.title = 'Login failed';
-      err.errors = { credential: 'The provided credentials were invalid.' };
       return next(err);
     }
 
     const safeUser = {
       id: user.id,
-      email: user.email,
-      username: user.username,
       firstName: user.firstName,
-      lastName: user.lastName
+      lastName: user.lastName,
+      username: user.username,
+      email: user.email
     };
 
     await setTokenCookie(res, safeUser);
@@ -59,14 +59,16 @@ router.post(
   }
 );
 
+// Log out user
 router.delete(
   '/',
   (_req, res) => {
-    res.clearCookie('XSRF-TOKEN');
+    res.clearCookie('token');
     return res.json({ message: 'success' });
   }
 );
 
+// Get current user
 router.get(
   '/',
   (req, res) => {
@@ -74,10 +76,10 @@ router.get(
     if (user) {
       const safeUser = {
         id: user.id,
-        email: user.email,
-        username: user.username,
         firstName: user.firstName,
-        lastName: user.lastName
+        lastName: user.lastName,
+        username: user.username,
+        email: user.email
       };
       return res.json({
         user: safeUser
