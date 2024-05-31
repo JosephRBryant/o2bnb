@@ -10,8 +10,11 @@
     "start": "per-env",
     "db-reset": "rm -rf db/dev.db && npm run migrate && npm run seed",
     "start:development": "nodemon ./bin/www",
-    "start:production": "dotenv node ./bin/www",
-    "build": "node psql-setup-script.js"
+    "start:production": "node ./bin/www",
+    "build": "node psql-setup-script.js",
+    "start-test": "dotenv node ./bin/www",
+    "build-test": "dotenv node psql-setup-script.js",
+    "production-db": "dotenv npx sequelize db:migrate && dotenv npx sequelize db:seed:all"
   },
   "keywords": [],
   "author": "",
