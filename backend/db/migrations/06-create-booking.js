@@ -51,7 +51,7 @@ module.exports = {
           allowNull: false,
           type: Sequelize.DATE
         }
-      });
+      }, options);
     } catch (error) {
       console.error('try error', error)
     }
