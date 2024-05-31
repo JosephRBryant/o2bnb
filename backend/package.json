@@ -10,8 +10,11 @@
     "start": "per-env",
     "db-reset": "rm -rf db/dev.db && npm run migrate && npm run seed",
     "start:development": "nodemon ./bin/www",
-    "start:production": "dotenv node ./bin/www",
-    "build": "node psql-setup-script.js"
+    "start:production": "node ./bin/www",
+    "build": "dotenv node psql-setup-script.js",
+    "start-test": "dotenv node ./bin/www",
+    "build-test": "dotenv node psql-setup-script.js",
+    "production-db": "dotenv npx sequelize db:migrate && dotenv npx sequelize db:seed:all"
   },
   "keywords": [],
   "author": "",
@@ -31,10 +34,10 @@
     "per-env": "^1.0.2",
     "pg": "^8.11.5",
     "sequelize": "^6.37.3",
-    "sequelize-cli": "^6.6.2"
+    "sequelize-cli": "^6.6.2",
+    "dotenv-cli": "^7.4.2"
   },
   "devDependencies": {
-    "dotenv-cli": "^7.4.2",
     "nodemon": "^3.1.0",
     "sqlite3": "^5.1.7"
   }
