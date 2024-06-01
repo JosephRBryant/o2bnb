@@ -8,8 +8,11 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Spot.belongsTo(
         models.User,
-        {as: 'owner'},
-        {foreignKey: 'ownerId', onDelete: 'CASCADE'}
+        {
+          as: 'Owner',
+          foreignKey: 'ownerId',
+          onDelete: 'CASCADE'
+        }
       ),
       Spot.hasMany(
         models.SpotImage,
@@ -75,7 +78,7 @@ module.exports = (sequelize, DataTypes) => {
             throw new Error('State must be letters')
           }
         },
-        len: [3, 20]
+        len: [3, 30]
       }
     },
     country: {
