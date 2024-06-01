@@ -82,7 +82,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     country: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
       validate: {
         notNull: {
