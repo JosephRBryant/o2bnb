@@ -37,6 +37,7 @@ module.exports = {
        }
      ], { validate: true })
     } catch(error) {
+      console.error('seeder error================', error)
       throw new Error('Error in the Users seeder')
     }
   },
