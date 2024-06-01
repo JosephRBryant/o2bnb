@@ -339,6 +339,7 @@ router.post('/', requireAuth, handleValidationErrors, async (req, res, next) => 
     }
   } catch(error) {
     error.message = "Bad Request";
+    console.error('console.error error===============', error)
     error.status = 400;
     next(error)
   }

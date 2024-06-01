@@ -82,7 +82,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     country: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
       validate: {
         notNull: {
@@ -93,8 +93,7 @@ module.exports = (sequelize, DataTypes) => {
           if (typeof value !== 'string') {
             throw new Error('Country must be letters')
           }
-        },
-        len: [3, 50]
+        }
       }
     },
     lat: {
