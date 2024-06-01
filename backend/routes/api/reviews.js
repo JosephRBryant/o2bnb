@@ -36,7 +36,11 @@ router.get('/current', requireAuth, async (req, res, next) => {
         // format dates
         // review.dataValues.createdAt = review.dataValues.createdAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0];
         // review.dataValues.updatedAt = review.dataValues.updatedAt.toISOString().replace('Z', '').replace('T', ' ').split('.')[0];
-
+        review.dataValues.createdAt = formatDateTime(review.dataValues.createdAt);
+        review.dataValues.updatedAt = formatDateTime(review.dataValues.updatedAt);
+        review.Spot.lat = Number(review.Spot.lat);
+        review.Spot.lng = Number(review.Spot.lng);
+        review.Spot.price = Number(review.Spot.price);
         let spotId = review.spotId;
         spotImages.forEach(image => {
           if (image.spotId === spotId && image.preview) {
@@ -48,6 +52,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
           return review.Spot.dataValues.previewImage = "No preview image";
         }
       })
+
 
 
 
@@ -72,6 +77,17 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
       return res.status(404).json({message: "Review couldn't be found"})
     }
 
+    // check review image count, max 10 per review
+    let imageCount = await ReviewImage.count({
+      where: {
+        reviewId: reviewId
+      }
+    })
+    console.log('image count: ', imageCount);
+    if (imageCount >= 10) {
+      return res.status(403).json({message: "Maximum number of images for this resource was reached"})
+    }
+
     // find user reviews
     let userReviews = await Review.findAll({
       where: {
@@ -87,22 +103,12 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
       }
     });
 
-    // check review image count, max 10 per review
-    let imageCount = await ReviewImage.count({
-      where: {
-        reviewId: reviewId
-      }
-    })
-    if (imageCount > 9) {
-      return res.status(403).json({message: "Maximum number of images for this resource was reached"})
-    }
-
     if (isUserReview) {
       const image = await ReviewImage.create({reviewId, url});
-
+      res.status(201);
       return res.json({"id": image.id, "url": image.url})
     } else {
-      return res.status(500).json({message: 'Current user does not own review'});
+      return res.status(403).json({message: 'Forbidden'});
     }
 
   } catch (error) {
@@ -154,10 +160,12 @@ router.put('/:reviewId', requireAuth, handleValidationErrors, async (req, res, n
 
       res.json(updatedReview);
     } else {
-      throw new ValidationError('Current user does not own review')
+      return res.status(403).json({message: 'Forbidden'});
     }
 
   } catch (error) {
+    error.message = "Bad Request";
+    error.status = 400;
     next(error)
   }
 })
@@ -196,7 +204,7 @@ router.delete('/:reviewId', handleValidationErrors, requireAuth, async (req, res
       await deletedReview.destroy();
       return res.json({ message: 'Successfully deleted' });
     } else {
-      return res.status(500).json({ message: "Current user does not own review"})
+      return res.status(403).json({message: 'Forbidden'});
     }
   } catch (error) {
     error.status = 404;
