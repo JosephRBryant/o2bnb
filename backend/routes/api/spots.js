@@ -10,10 +10,73 @@ const { formatDateTime, formatDate, formatFullDate } = require('../../helper-fun
 const { hasBookingConflict } = require('../../helper-functions/booking-conflicts')
 const router = express.Router();
 
+const queryParams = [
+  check('minLat')
+    .optional()
+    .isDecimal()
+    .withMessage("Minimum latitude is invalid"),
+  check('maxLat')
+    .optional()
+    .isDecimal()
+    .withMessage("Maximum latitude is invalid"),
+  check('minLng')
+    .optional()
+    .isDecimal()
+    .withMessage("Minimum longitude is invalid"),
+  check('maxLng')
+    .optional()
+    .isDecimal()
+    .withMessage("Maximum longitude is invalid"),
+  check('minPrice')
+    .optional()
+    .isDecimal()
+    .withMessage("Minimum price must be a decimal value")
+    .custom(value => {
+      if (value < 0) {
+        throw new Error("Minimum price must be greater than or equal to 0");
+      }
+      return true;
+    }),
+  check('maxPrice')
+    .optional()
+    .isDecimal()
+    .withMessage("Maximum price must be a decimal value")
+    .custom(value => {
+      if (value < 0) {
+        throw new Error("Maximum price must be greater than or equal to 0");
+      }
+      return true;
+    }),
+    handleValidationErrors
+]
+
 // Get all spots
-router.get('/', async (req, res, next) => {
+router.get('/', queryParams, async (req, res, next) => {
   try {
     let { minLat, maxLat, minLng, maxLng, minPrice, maxPrice, page = 1, size = 20 } = req.query;
+
+    if (page < 1) {
+      res.status(400).json({message: "Bad Request",
+      errors: {
+        page: "Page must be greater than or equal to 1"
+      }})
+    }
+    if (size < 1) {
+      res.status(400).json({message: "Bad Request",
+      errors: {
+        page: "Size must be greater than or equal to 1"
+      }})    }
+
+    if (!page) page = 1;
+    if (!size) size = 20;
+    page = Number(page);
+    size = Number(size);
+
+    if (page > 10) page = 10;
+    if (size > 20) size = 20;
+    let pagination = {};
+    pagination.limit = size;
+    pagination.offset = (page - 1) * size;
 
     let where = {};
     if (minLat !== undefined) {
@@ -35,13 +98,16 @@ router.get('/', async (req, res, next) => {
       where.price = { ...where.price, [Op.lte]: maxPrice}
     }
 
+
     let spotData = await Spot.findAll({
       where,
       include: [
         {model: Review},
         {model: SpotImage}
-      ]
+      ],
+      ...pagination
     });
+
     let spots = [];
     spotData.forEach(spot => {
 
@@ -636,7 +702,6 @@ router.get('/:spotId/bookings', handleValidationErrors, requireAuth, async (req,
     } else {
       res.json({Bookings: spotBookings})
     }
-
   } catch(error) {
     next(error)
   }
