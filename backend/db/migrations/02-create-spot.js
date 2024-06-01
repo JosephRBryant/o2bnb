@@ -38,7 +38,7 @@ module.exports = {
         allowNull: false
       },
       country: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         allowNull: false
       },
       lat: {
