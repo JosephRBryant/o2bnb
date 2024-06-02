@@ -54,14 +54,22 @@ const queryParams = [
 router.get('/', queryParams, async (req, res, next) => {
   try {
     let { minLat, maxLat, minLng, maxLng, minPrice, maxPrice, page = 1, size = 20 } = req.query;
+    if ((page < 1 || page === undefined) && (size < 1 ||size === undefined)) {
+      console.log('tripping');
+      res.status(400).json({message: "Bad Request",
+      errors: {
+        page: "Page must be greater than or equal to 1",
+        size: "Size must be greater than or equal to 1"
+      }})
 
-    if (page < 1) {
+    }
+    if (page < 1 || page === undefined) {
       res.status(400).json({message: "Bad Request",
       errors: {
         page: "Page must be greater than or equal to 1"
       }})
     }
-    if (size < 1) {
+    if (size < 1 || size === undefined) {
       res.status(400).json({message: "Bad Request",
       errors: {
         page: "Size must be greater than or equal to 1"
@@ -69,6 +77,9 @@ router.get('/', queryParams, async (req, res, next) => {
 
     if (!page) page = 1;
     if (!size) size = 20;
+    if (typeof Number(page) !== 'number') {
+
+    }
     page = Number(page);
     size = Number(size);
 
@@ -155,7 +166,7 @@ router.get('/', queryParams, async (req, res, next) => {
     if(!spots || spots.length === 0) {
       res.status(404).json({message: 'There are no spots'})
     }
-    res.json({"Spots": spots});
+    res.json({"Spots": spots, page, size});
   } catch(error) {
     next(error)
   }
