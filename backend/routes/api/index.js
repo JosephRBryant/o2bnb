@@ -82,8 +82,4 @@ router.delete('/review-images/:imageId', requireAuth, handleValidationErrors, as
   }
 })
 
-router.post('/test', function(req, res) {
-res.json({ requestBody: req.body });
-})
-
 module.exports = router;
