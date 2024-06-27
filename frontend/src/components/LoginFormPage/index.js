@@ -1,3 +1,3 @@
-import configureStore from './store';
+import LoginFormPage from './LoginFormPage';
 
-export default configureStore;
+export default LoginFormPage;
