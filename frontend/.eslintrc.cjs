@@ -12,10 +12,7 @@ module.exports = {
   plugins: ['react-refresh'],
   ignorePatterns: ['dist', 'node_modules'],
   rules: {
-    'react-refresh/only-export-components': [
-      'warn',
-      { allowConstantExport: true },
-    ],
+    'react-refresh/only-export-components': 'off',
     'react/prop-types': 'off',
     'no-unused-vars': 'off'
   },
