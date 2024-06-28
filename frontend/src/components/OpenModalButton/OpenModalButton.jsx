@@ -1,6 +1,6 @@
 import { useModal } from "../../context/Modal";
 
-export function OpenModalButton({
+function OpenModalButton({
   modalComponent,
   buttonText,
   onButtonClick,
