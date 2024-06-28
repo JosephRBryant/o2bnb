@@ -60,7 +60,6 @@ router.delete('/review-images/:imageId', requireAuth, handleValidationErrors, as
     // Does user exist
     let { user } = req;
     if (!user) {
-      console.log('testtest')
       res.status(401).json({message: "Authentication required"})
     }
     // Does user own image
