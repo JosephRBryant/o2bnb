@@ -470,7 +470,6 @@ router.post('/:spotId/images', handleValidationErrors, requireAuth, async (req, 
           }
         })
         let preview = false;
-        console.log(spotImagePreview[0].toJSON());
 
         if (spotImagePreview.length > 1) {
           spotImagePreview[0].set({
