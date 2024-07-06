@@ -1,5 +1,6 @@
 import React from "react";
 import { useModal } from "../../context/Modal";
+import './ProfileButton.css'
 
 function OpenModalMenuItem({
   modalComponent,

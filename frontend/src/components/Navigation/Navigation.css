@@ -1,11 +1,29 @@
+nav {
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100dvw;
+  height: 5rem;
+  box-shadow: rgb(0 0 0 / 8%) 0 1px 0;
+}
+
 .nav-list {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
-  margin: 0;
+  align-items: flex-start;
+  max-width: 1000px;
+  width: auto;
+  width: 100%;
+  padding: 1rem 0;
+  margin: 0 3rem;
   list-style: none;
-  border-bottom: 1px solid #DDDDDD;
+}
+
+.profile-btn-drop-down {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
 .hidden {
