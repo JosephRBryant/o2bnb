@@ -1,11 +1,11 @@
 .tile-container {
-  height: 340px;
-  width: 238px;
+  height: 300px;
+  width: auto;
   cursor: pointer;
 }
 
 .spot-image {
-  width: 238px;
+  /* width: 238px; */
   height: 238px;
   border-radius: 10px;
   background-size: cover;

@@ -1,5 +1,5 @@
 import './SpotTile.css';
-import SpotListing from './SpotListing';
+// import SpotListing from './SpotListing';
 import { FaStar } from "react-icons/fa";
 // import '../../../dist/assets/spotImages'
 const SpotTile = (spot) => {
@@ -9,7 +9,7 @@ const SpotTile = (spot) => {
   if (spot.previewImage.includes('../../../frontend/dist/assets/spotImages')) {
     spot.previewImage = spot.previewImage.slice(18)
   }
-  
+
   return (
     <div className="tile-container">
       <div key={`${spot.id}-${spot.name}`} className="spot-image" style={{backgroundImage: `url(${spot.previewImage})`}}></div>
