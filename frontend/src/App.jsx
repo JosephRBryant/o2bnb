@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import Navigation from "./components/Navigation/Navigation";
+import Splash from "./screens/Splash";
+import spotsReducer, { getAllSpotsThunk } from "./store/spots";
 import * as sessionActions from './store/session';
 
 function Layout() {
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
+  const spots = useSelector(state => state.spotState.allSpots);
 
   useEffect(() => {
     dispatch(sessionActions.restoreUser()).then(() => {
@@ -14,6 +17,15 @@ function Layout() {
     });
   }, [dispatch]);
 
+  useEffect(() => {
+    const getData = async () => {
+      dispatch(getAllSpotsThunk());
+      setIsLoaded(true)
+    }
+    if (!isLoaded && !spots.length) {
+      getData()
+    }
+  }, [dispatch, isLoaded, spots])
   return (
     <>
       <Navigation isLoaded={isLoaded} />
@@ -28,7 +40,11 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <h1>Welcome!</h1>
+        element: (
+          <>
+            <Splash />
+          </>
+        )
       }
     ]
   }

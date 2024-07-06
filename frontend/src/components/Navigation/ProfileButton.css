@@ -15,6 +15,10 @@
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 16%), 0 1px 2px 0 rgba(0, 0, 0, 0.08);
 }
 
+.profile-button-active {
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 16%), 0 1px 2px 0 rgba(0, 0, 0, 0.08);
+}
+
 .profile-image {
   height: 2rem;
   width: 2rem;
@@ -28,18 +32,16 @@
 }
 
 .profile-dropdown {
-  position: absolute;
+  position: relative;
   display: flex;
   align-items: flex-start;
   flex-direction: column;
   padding: 1rem 0;
-  border-bottom: none;
   box-shadow: 0 0 15px rgba(0, 0, 0, 12%);
   border-radius: 1rem;
   background-color: #ffffff;
-  width: 15rem;
-  top: 4.5rem;
-  right: 1rem;
+  width: 13rem;
+  top: .5rem;
   cursor: pointer;
 }
 
@@ -49,7 +51,9 @@
   height: .625rem;
   padding: 1rem 0 1rem 1rem;
   right: 1rem;
-  width: 14rem;
+  width: 12rem;
+  font-family: 'Roboto', sans-serif;
+  font-size: .9375rem;
 }
 
 .profile-dropdown li:hover {
@@ -59,3 +63,8 @@
 /* ul {
   padding: 1rem 0;
 } */
+
+#log-out-btn {
+  background-color: none;
+  border: none;
+}

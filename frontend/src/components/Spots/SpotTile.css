@@ -1,0 +1,38 @@
+.tile-container {
+  height: 340px;
+  width: 238px;
+  cursor: pointer;
+}
+
+.spot-image {
+  width: 238px;
+  height: 238px;
+  border-radius: 10px;
+  background-size: cover;
+  background-position: center;
+}
+
+.location-rating {
+  display: flex;
+  margin: 0.75rem 0;
+  padding: 0 .2rem;
+  justify-content: space-between;
+  font-family: 'Robot', sans-serif;
+  color: #222;
+}
+
+.star-rating {
+  display: flex;
+  gap: .25rem
+}
+
+.price {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0 .2rem;
+  color: #222;
+  gap: .25rem;
+}
