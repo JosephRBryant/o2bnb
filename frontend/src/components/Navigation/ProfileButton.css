@@ -1,0 +1,61 @@
+.profile-button {
+  display: flex;
+  align-items: center;
+  height: 3rem;
+  width: 5.375rem;
+  padding: .5rem .5rem .5rem 0.875rem;
+  border-radius: 30px;
+  border: 1px solid #DDDDDD;
+  background-color: #ffffff;
+  cursor: pointer;
+  transition: .15s;
+}
+
+.profile-button:hover {
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 16%), 0 1px 2px 0 rgba(0, 0, 0, 0.08);
+}
+
+.profile-image {
+  height: 2rem;
+  width: 2rem;
+  margin-left: 14px;
+  color: #2196F3;
+}
+
+.profile-hamburger {
+  height: 1rem;
+  width: 1rem;
+}
+
+.profile-dropdown {
+  position: absolute;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  padding: 1rem 0;
+  border-bottom: none;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 12%);
+  border-radius: 1rem;
+  background-color: #ffffff;
+  width: 15rem;
+  top: 4.5rem;
+  right: 1rem;
+  cursor: pointer;
+}
+
+.profile-dropdown li {
+  display: flex;
+  align-items: center;
+  height: .625rem;
+  padding: 1rem 0 1rem 1rem;
+  right: 1rem;
+  width: 14rem;
+}
+
+.profile-dropdown li:hover {
+  background-color: #f7f7f7;
+}
+
+/* ul {
+  padding: 1rem 0;
+} */

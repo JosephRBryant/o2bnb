@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { FaUserCircle } from 'react-icons/fa';
+import { RxHamburgerMenu } from "react-icons/rx";
 import * as sessionActions from '../../store/session';
 import OpenModalMenuItem from './OpenModalMenuItem';
 import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
+import './ProfileButton.css';
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
@@ -43,8 +45,9 @@ function ProfileButton({ user }) {
 
   return (
     <>
-      <button onClick={toggleMenu}>
-        <FaUserCircle />
+      <button className='profile-button' onClick={toggleMenu}>
+        <RxHamburgerMenu className='profile-hamburger'/>
+        <FaUserCircle className='profile-image'/>
       </button>
       <ul className={ulClassName} ref={ulRef}>
         {user ? (
