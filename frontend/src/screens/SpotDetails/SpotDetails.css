@@ -1,0 +1,63 @@
+
+header {
+  display: flex;
+  flex-direction: column;
+  width: 1000px;
+}
+
+.spot-detail-main {
+  display: flex;
+  flex-direction: column;
+  width: 100% !important;
+  height: auto !important;
+  gap: 1rem !important;
+}
+
+.thumb-img {
+  background-color: blue;
+  border-radius: 1rem;
+  background-size: cover;
+  background-position: center;
+}
+
+.prev-img {
+  grid-area: z;
+  background-size: cover;
+  background-position: center;
+  border-radius: 1rem;
+}
+
+.image-container {
+  display: grid;
+  width: 1000px;
+  height: 500px;
+  gap: 1rem;
+  grid-template-areas:
+    "z z . ."
+    "z z . ."
+
+  ;
+}
+
+.spot-info-container {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 1rem;
+}
+
+.spot-description {
+  display: flex;
+  flex-direction: column;
+}
+
+.spot-info {
+  width: 300px;
+  height: 200px;
+  border-radius: 1rem;
+  background-color: blue;
+}
+
+h2.hosted-by {
+  color: black !important;
+  margin-top: 0;
+}

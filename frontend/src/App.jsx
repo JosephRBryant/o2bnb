@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import Navigation from "./components/Navigation/Navigation";
 import Splash from "./screens/Splash";
+import SpotDetails from './screens/SpotDetails/SpotDetails'
 import spotsReducer, { getAllSpotsThunk } from "./store/spots";
 import * as sessionActions from './store/session';
 
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
             <Splash />
           </>
         )
+      },
+      {
+        path: '/spots/:spotId',
+        element: <SpotDetails />
       }
     ]
   }

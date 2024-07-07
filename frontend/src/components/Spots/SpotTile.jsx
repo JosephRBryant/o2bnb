@@ -1,8 +1,9 @@
+import { useNavigate } from 'react-router-dom';
 import './SpotTile.css';
-// import SpotListing from './SpotListing';
 import { FaStar } from "react-icons/fa";
-// import '../../../dist/assets/spotImages'
+
 const SpotTile = (spot) => {
+  const navigate = useNavigate();
   spot = spot.spot
 
   // handle seed data
@@ -10,8 +11,16 @@ const SpotTile = (spot) => {
     spot.previewImage = spot.previewImage.slice(18)
   }
 
+  // handle goToSpotDetails
+  const goToSpotDetail = (e) => {
+    e.preventDefault();
+    navigate(`/spots/${spot.id}`);
+  }
+
+  // console.log('spot in spot tile', spot);
+
   return (
-    <div className="tile-container">
+    <div className="tile-container" onClick={goToSpotDetail}>
       <div key={`${spot.id}-${spot.name}`} className="spot-image" style={{backgroundImage: `url(${spot.previewImage})`}}></div>
       <div className="location-rating">
         <p className='location'>{`${spot.city}, ${spot.state}`}</p>
