@@ -2,12 +2,16 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getSpotDetailsThunk } from "../../store/spots";
+import { FaStar } from "react-icons/fa";
+import SpotInfo from "./SpotInfo";
 import './SpotDetails.css';
 
 const SpotDetails = () => {
   const dispatch = useDispatch();
   const { spotId } = useParams();
   const [isLoaded, setIsLoaded] = useState(false);
+  const [spot, setSpot] = useState({});
+
   let previewImage;
   let spotImages;
   // step 8
@@ -16,8 +20,9 @@ const SpotDetails = () => {
   useEffect(()=> {
     const getData = async() => {
       // grab data from backend
-      dispatch(getSpotDetailsThunk(spotId));
+      await dispatch(getSpotDetailsThunk(spotId));
       setIsLoaded(true);
+      setSpot({...spotDetails});
     }
     // we are not loaded
     if (!isLoaded) {
@@ -61,10 +66,13 @@ const SpotDetails = () => {
             <p>{spotDetails.description}</p>
           </div>
           <div className="spot-info">
-
+            <SpotInfo spot={spot}/>
           </div>
         </div>
         <div className="reviews-container">
+          <h3>
+            <FaStar /> {spot.avgStarRating} • {spot.numReviews} reviews
+          </h3>
 
         </div>
       </main>

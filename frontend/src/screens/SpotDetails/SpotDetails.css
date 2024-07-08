@@ -43,6 +43,9 @@ header {
   display: grid;
   grid-template-columns: 3fr 1fr;
   gap: 1rem;
+  padding-bottom: 2rem;
+  box-shadow: rgb(0 0 0 / 8%) 0 1px 0;
+
 }
 
 .spot-description {
@@ -51,13 +54,16 @@ header {
 }
 
 .spot-info {
+  display: flex;
+  flex-direction: column;
   width: 300px;
-  height: 200px;
+  padding: 1rem;
   border-radius: 1rem;
-  background-color: blue;
+  border: 1px solid #ddd;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
 }
 
-h2.hosted-by {
-  color: black !important;
+.hosted-by {
+  color: #222;
   margin-top: 0;
 }
