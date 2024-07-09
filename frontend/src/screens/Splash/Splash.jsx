@@ -30,8 +30,8 @@ const Splash = () => {
   return (
     <main className="splash-main">
       {spots.map((spot, idx) => (
-        <div key={`${idx}-${spot.name}`} className="spot-tile">
-          <SpotTile spot={spot}/>
+        <div key={`${idx}-${spot.name}`} className="spot-tile" data-tooltip={spot.name}>
+          <SpotTile  spot={spot}/>
         </div>
       ))}
     </main>

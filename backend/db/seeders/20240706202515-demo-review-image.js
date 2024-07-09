@@ -90,7 +90,7 @@ module.exports = {
         { reviewId: 57, url: "../../../frontend/dist/assets/reviewImages/spot-image84.jpeg" },
         { reviewId: 58, url: "../../../frontend/dist/assets/reviewImages/spot-image89.jpeg" },
         { reviewId: 59, url: "../../../frontend/dist/assets/reviewImages/spot-image94.jpeg" },
-        { reviewId: 60, url: "../../../frontend/dist/assets/reviewImages/spot-image99.jpeg" }
+        { reviewId: 59, url: "../../../frontend/dist/assets/reviewImages/spot-image99.jpeg" }
       ], { validate: true })
     } catch(error) {
       console.error('Error during seeding of review images', error);

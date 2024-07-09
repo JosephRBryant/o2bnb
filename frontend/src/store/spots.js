@@ -35,9 +35,7 @@ export const getSpotDetailsThunk = (spotId) => async (dispatch) => {
 
     if (res.ok) {
       // step 5
-      console.log('We are in step 5');
       const data = await res.json();
-      console.log('data from res', data)
       dispatch(getSpotDetails(data))
     } else {
       throw res;

@@ -43,8 +43,8 @@ module.exports = (sequelize, DataTypes) => {
           }
         },
         len: {
-          args: [5, 240],
-          msg: 'Review length must be from 5 to 240 characters'
+          args: [5, 1000],
+          msg: 'Review length must be from 5 to 1000 characters'
         }
       }
     },

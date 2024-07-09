@@ -15,23 +15,31 @@ header {
 
 .thumb-img {
   background-color: blue;
-  border-radius: 1rem;
   background-size: cover;
   background-position: center;
+}
+
+.img-b {
+  border-radius: 0 1rem 0 0;
+}
+
+.img-d {
+  border-radius: 0 0 1rem 0;
 }
 
 .prev-img {
   grid-area: z;
   background-size: cover;
   background-position: center;
-  border-radius: 1rem;
+  border-radius: 1rem 0 0 1rem;
 }
 
 .image-container {
   display: grid;
   width: 1000px;
   height: 500px;
-  gap: 1rem;
+  border-radius: 1rem;
+  gap: .5rem;
   grid-template-areas:
     "z z . ."
     "z z . ."
@@ -66,4 +74,16 @@ header {
 .hosted-by {
   color: #222;
   margin-top: 0;
+}
+
+.rating-count {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  color: #222;
+}
+
+.rating {
+  display: flex;
+  gap: .25rem;
 }
