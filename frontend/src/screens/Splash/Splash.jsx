@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from 'react-router-dom';
-import { getAllSpotsThunk } from "../../store/spots";
+import { getAllSpotsThunk, getSpotDetailsThunk } from "../../store/spots";
 import SpotTile from "../../components/Spots";
 import './Splash.css';
 

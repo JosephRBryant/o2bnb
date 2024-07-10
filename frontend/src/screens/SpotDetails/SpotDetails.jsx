@@ -22,7 +22,7 @@ const SpotDetails = () => {
   useEffect(()=> {
     const getData = async() => {
       // grab data from backend
-      await dispatch(getSpotDetailsThunk(spotId));
+      await dispatch(getSpotDetailsThunk(Number(spotId)));
       setIsLoaded(true);
       setSpot({...spotDetails});
     }
@@ -74,10 +74,10 @@ const SpotDetails = () => {
         <div className="reviews-container">
           <h2 className="rating-count">
             <div className="rating">
-              <FaStar /> {spot.avgStarRating}
+              <FaStar /> {!spot.numReviews ? 'New' : spot.avgStarRating}
             </div>
             <div className="count">
-              {`•  ${spot.numReviews} reviews`}
+              {!spot.numReviews ? '' : `•  ${spot.numReviews} reviews`}
             </div>
           </h2>
           <ReviewListing />

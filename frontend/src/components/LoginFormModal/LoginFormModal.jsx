@@ -1,11 +1,14 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import * as sessionActions from '../../store/session';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useModal } from "../../context/Modal";
 import './LoginForm.css';
 
 function LoginFormModal() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const sessionUser = useSelector(state => state.session.user)
   const [credential, setCredential] = useState('');
   const [password, setPassword] = useState('');
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true)
@@ -13,19 +16,23 @@ function LoginFormModal() {
   const [loginError, setLoginError] = useState('');
   const { closeModal } = useModal();
 
-  const handleSubmit = (e) => {
+  console.log('sess', sessionUser);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
-    return dispatch(sessionActions.login({ credential, password }))
-    .then(closeModal)
-    .catch(async (res) => {
-        const data = await res.json();
-        if (data && data.errors) {
-          setErrors(data.errors);
-          setLoginError(data.errors);
-        }
+    try {
+      await dispatch(sessionActions.login({ credential, password }))
+      navigate('/');
+      closeModal;
+    } catch (res) {
+      const data = await res.json();
+      if (data?.message) {
+        console.log('is errorring')
+        setErrors(data.message);
+        setLoginError(data.message);
       }
-    );
+    }
   };
 
   const demoUser = (e) => {
@@ -44,10 +51,14 @@ function LoginFormModal() {
     setIsSubmitDisabled(e.target.value.length < 6 || credential.length < 4)
   }
 
+  console.log('login errors', errors);
+
   return (
     <div className="loginForm">
-      <h1>Log In</h1>
-      <h2>{loginError}</h2>
+      <h1 className="login-header">Log In</h1>
+      <div className="credentials-error">
+        <h2>{loginError}</h2>
+      </div>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
