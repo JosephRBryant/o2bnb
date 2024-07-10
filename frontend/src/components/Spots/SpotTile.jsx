@@ -8,7 +8,7 @@ const SpotTile = (spot) => {
 
   // handle seed data
   if (spot.previewImage.includes('../../../frontend/dist/assets/spotImages')) {
-    spot.previewImage = spot.previewImage.slice(18)
+    spot.previewImage = spot.previewImage.replace('/frontend', '')
   }
 
   // handle goToSpotDetails
@@ -16,6 +16,8 @@ const SpotTile = (spot) => {
     e.preventDefault();
     navigate(`/spots/${spot.id}`);
   }
+
+  console.log('spot from tile', spot);
 
   return (
     <div className="tile-container" onClick={goToSpotDetail}>

@@ -17,6 +17,12 @@ header {
   background-color: blue;
   background-size: cover;
   background-position: center;
+  cursor: pointer;
+  transition: .1s;
+}
+
+.thumb-img:hover {
+  filter: brightness(95%);
 }
 
 .img-b {
@@ -32,6 +38,12 @@ header {
   background-size: cover;
   background-position: center;
   border-radius: 1rem 0 0 1rem;
+  cursor: pointer;
+  transition: .1s;
+}
+
+.prev-img:hover {
+  filter: brightness(95%);
 }
 
 .image-container {

@@ -8,23 +8,39 @@ const ManageSpot = () => {
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
   let userSpots = useSelector(state => state.spotState.userSpots);
-  const user = useSelector(state => state.session.user);
+  const sessionUser = useSelector(state => state.session.user);
 
   useEffect(() => {
     const getData = async () => {
-      dispatch(getUserSpotsThunk(user.id));
+      dispatch(getUserSpotsThunk(sessionUser.id));
       setIsLoaded(true)
     }
-    if (!isLoaded && !userSpots.length) {
+    if (!isLoaded) {
       getData()
     }
-  })
+  },[dispatch, isLoaded, sessionUser.id])
 
   if (!userSpots) {
     return <h1>Loading...</h1>
   }
   return (
-    <h1>placeholder</h1>
+    <>
+      <header>
+        <h1>Manage your Spots</h1>
+        <button className="create-new-spot" onSubmit={() => null}>Create a New Spot</button>
+      </header>
+      <main className='manage-spots'>
+        {userSpots.map((spot, idx) => (
+          <div key={`${idx}-${spot.name}`} className="spot-tile" data-tooltip={spot.name}>
+            <SpotTile spot={spot}/>
+            <div className="update-delete-btns">
+              <button onSubmit={() => null} className="update-spot">Update</button>
+              <button onSubmit={() => null} className="delete-spot">Delete</button>
+            </div>
+          </div>
+        ))}
+      </main>
+    </>
   )
 }
 

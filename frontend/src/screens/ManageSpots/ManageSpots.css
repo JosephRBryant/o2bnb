@@ -1,0 +1,39 @@
+.create-new-spot {
+  height: 2rem;
+  width: 13rem;
+  margin-bottom: 2rem;
+  border-radius: .5rem;
+  border: none;
+  background-color: #2196F3;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: bold;
+  letter-spacing: .05rem;
+  cursor: pointer;
+}
+
+.update-delete-btns {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 2rem;
+}
+
+.update-spot,
+.delete-spot {
+  padding: .25rem 1.5rem;
+  border-radius: .5rem;
+  cursor: pointer;
+}
+
+.update-spot {
+  margin-right: 1rem;
+  border: none;
+  background-color: #2196F3;
+  color: #fff;
+}
+
+.delete-spot {
+  background-color: #fff;
+  color: #2196F3;
+  border: 2px solid #2196F3;
+}
