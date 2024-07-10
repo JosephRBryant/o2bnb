@@ -1,6 +1,6 @@
 const GET_ALL_SPOTS = 'spots/getAllSpots';
 const GET_SPOT_DETAILS = 'spots/getSpotDetails';
-const GET_USER_SPOTS = 'spots/getUserSpots';
+// const GET_USER_SPOTS = 'spots/getUserSpots';
 
 const getAllSpots = (spots) => {
   return {
@@ -16,12 +16,12 @@ const getSpotDetails = (spotDetails) => {
   }
 }
 
-const getUserSpots = (userSpots) => {
-  return {
-    type: GET_USER_SPOTS,
-    payload: userSpots
-  }
-}
+// const getUserSpots = (userSpots) => {
+//   return {
+//     type: GET_USER_SPOTS,
+//     payload: userSpots
+//   }
+// }
 
 export const getAllSpotsThunk = () => async (dispatch) => {
   try {
@@ -54,24 +54,24 @@ export const getSpotDetailsThunk = (spotId) => async (dispatch) => {
 }
 
 export const getUserSpotsThunk = (userId) => async (dispatch) => {
-  try {
-    const res = await fetch(`/api/spots/current`);
-    if (res.ok) {
-      const data = await res.json();
-      dispatch(getUserSpots(data))
-    } else {
-      throw res
-    }
-  } catch (error) {
-    return error;
-  }
+  // try {
+  //   const res = await fetch(`/api/spots/current`);
+  //   if (res.ok) {
+  //     const data = await res.json();
+  //     dispatch(getUserSpots(data))
+  //   } else {
+  //     throw res
+  //   }
+  // } catch (error) {
+  //   return error;
+  // }
 }
 
 const initialState = {
   allSpots: [],
   byId: {},
   spotDetails: {},
-  userSpots: []
+  // userSpots: []
 }
 
 const spotsReducer = (state = initialState, action) => {
@@ -97,14 +97,14 @@ const spotsReducer = (state = initialState, action) => {
         newState.byId[spot.id] = spot;
       }
       return newState;
-    case GET_USER_SPOTS:
-      newState = {...state};
-      newState.userSpots = action.payload;
+    // case GET_USER_SPOTS:
+    //   newState = {...state};
+    //   newState.userSpots = action.payload;
 
-      for (let spot of action.payload) {
-        newState.byId[spot.id] = spot
-      }
-      return newState;
+    //   for (let spot of action.payload) {
+    //     newState.byId[spot.id] = spot
+    //   }
+    //   return newState;
     default:
       return state;
   }

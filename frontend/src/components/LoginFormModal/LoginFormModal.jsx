@@ -24,7 +24,7 @@ function LoginFormModal() {
     try {
       await dispatch(sessionActions.login({ credential, password }))
       navigate('/');
-      closeModal;
+      closeModal();
     } catch (res) {
       const data = await res.json();
       if (data?.message) {
@@ -35,10 +35,11 @@ function LoginFormModal() {
     }
   };
 
-  const demoUser = (e) => {
+  const demoUser = async (e) => {
     e.preventDefault();
-    return dispatch(sessionActions.login({credential: 'Demo-lition', password: 'password'}))
-    .then(closeModal)
+    await dispatch(sessionActions.login({credential: 'Demo-lition', password: 'password'}))
+    closeModal();
+    navigate('/')
   }
 
   const handleCredentialChange = (e) => {

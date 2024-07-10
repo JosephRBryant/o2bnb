@@ -26,13 +26,13 @@ if (process.env.NODE_ENV !== 'production') {
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    {/* <BrowserRouter> */}
-      <ModalProvider>
-        <Provider store={store}>
+    <ModalProvider>
+      <Provider store={store}>
+        <BrowserRouter>
           <App />
           <Modal />
-        </Provider>
-      </ModalProvider>
-    {/* </BrowserRouter> */}
+        </BrowserRouter>
+      </Provider>
+    </ModalProvider>
   </React.StrictMode>
 );

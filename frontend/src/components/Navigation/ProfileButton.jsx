@@ -35,6 +35,12 @@ function ProfileButton({ user }) {
     return () => document.removeEventListener('click', closeMenu);
   }, [showMenu]);
 
+  const goToManageSpots = (e) => {
+    e.preventDefault();
+    closeMenu();
+    navigate('/spots/current');
+  }
+
   const closeMenu = () => setShowMenu(false);
 
   const logout = (e) => {
@@ -60,7 +66,7 @@ function ProfileButton({ user }) {
             <li>Hello, {user.firstName}</li>
             <li>{user.email}</li>
             <li>
-              <Link onClick={() => null} className='link-no-styling'>Manage Spots</Link>
+              <Link onClick={goToManageSpots} className='link-no-styling'>Manage Spots</Link>
             </li>
             <li>
               <Link onClick={logout} className='link-no-styling' id='log-out-btn'>Log Out</Link>
