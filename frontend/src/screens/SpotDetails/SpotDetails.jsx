@@ -77,7 +77,7 @@ const SpotDetails = () => {
               <FaStar /> {!spot.numReviews ? 'New' : spot.avgStarRating}
             </div>
             <div className="count">
-              {!spot.numReviews ? '' : `•  ${spot.numReviews} reviews`}
+              {spot.numReviews > 0 && `• ${spot.numReviews} ${spot.numReviews === 1 ? 'review' : 'reviews'}`}
             </div>
           </h2>
           <ReviewListing />
