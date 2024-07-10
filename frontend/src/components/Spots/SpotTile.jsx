@@ -17,8 +17,6 @@ const SpotTile = (spot) => {
     navigate(`/spots/${spot.id}`);
   }
 
-  console.log('spot from tile', spot);
-
   return (
     <div className="tile-container" onClick={goToSpotDetail}>
       <div key={`${spot.id}-${spot.name}`} className="spot-image" style={{backgroundImage: `url(${spot.previewImage})`}}>

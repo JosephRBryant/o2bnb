@@ -12,7 +12,7 @@ const ManageSpot = () => {
 
   useEffect(() => {
     const getData = async () => {
-      dispatch(getUserSpotsThunk(sessionUser.id));
+      await dispatch(getUserSpotsThunk(sessionUser.id));
       setIsLoaded(true)
     }
     if (!isLoaded) {
