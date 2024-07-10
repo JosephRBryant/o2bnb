@@ -12,8 +12,12 @@
 main {
   display: grid;
   justify-content: center;
-  max-width: 1000px;
+  max-width: 1032px;
   gap: 2.5rem 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(23%, 238px));
+  /* grid-template-columns: repeat(auto-fit, minmax(23%, 238px)); */
+  grid-template-columns: repeat(auto-fit, minmax(238px, 1fr));
   margin: 1rem 0;
+  padding: 0 1rem;
+  width: 100%;
+  box-sizing: border-box;
 }

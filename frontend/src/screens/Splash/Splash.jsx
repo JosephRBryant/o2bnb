@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { getAllSpotsThunk } from "../../store/spots";
+import { useNavigate } from 'react-router-dom';
+import { getAllSpotsThunk, getSpotDetailsThunk } from "../../store/spots";
 import SpotTile from "../../components/Spots";
 import './Splash.css';
 
 const Splash = () => {
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
+  const navigate = useNavigate();
   let spots = useSelector(state => state.spotState.allSpots);
 
   useEffect(() => {
@@ -22,13 +24,14 @@ const Splash = () => {
   if (!spots) {
     return <h1>Loading</h1>
   }
+
   spots = spots.filter(spot => spot.previewImage !== 'No Image');
-  console.log('spots', spots);
+
   return (
-    <main>
+    <main className="splash-main">
       {spots.map((spot, idx) => (
-        <div key={`${idx}-${spot.name}`} className="spot-tile">
-          <SpotTile spot={spot}/>
+        <div key={`${idx}-${spot.name}`} className="spot-tile" data-tooltip={spot.name}>
+          <SpotTile  spot={spot}/>
         </div>
       ))}
     </main>

@@ -55,7 +55,6 @@ router.get('/', queryParams, async (req, res, next) => {
   try {
     let { minLat, maxLat, minLng, maxLng, minPrice, maxPrice, page = 1, size = 20 } = req.query;
     if ((page < 1 || page === undefined) && (size < 1 ||size === undefined)) {
-      console.log('tripping');
       res.status(400).json({message: "Bad Request",
       errors: {
         page: "Page must be greater than or equal to 1",
@@ -238,7 +237,7 @@ router.get('/current', requireAuth, handleValidationErrors, async (req, res, nex
   }
 })
 
-// Get spot by spotId
+// Get spot details by spotId
 router.get('/:id', async (req, res, next) => {
   try {
     // Get spot and all associations
@@ -286,7 +285,7 @@ router.get('/:id', async (req, res, next) => {
     if (!spotData) {
       res.status(404).json({message: 'Could not get spot by spotId'});
     }
-    res.json(spotData)
+    return res.json(spotData)
   } catch (error) {
     error.status = 404;
     next(error)

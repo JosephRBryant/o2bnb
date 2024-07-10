@@ -1,0 +1,89 @@
+
+header {
+  display: flex;
+  flex-direction: column;
+  width: 1000px;
+}
+
+.spot-detail-main {
+  display: flex;
+  flex-direction: column;
+  width: 100% !important;
+  height: auto !important;
+  gap: 1rem !important;
+}
+
+.thumb-img {
+  background-color: blue;
+  background-size: cover;
+  background-position: center;
+}
+
+.img-b {
+  border-radius: 0 1rem 0 0;
+}
+
+.img-d {
+  border-radius: 0 0 1rem 0;
+}
+
+.prev-img {
+  grid-area: z;
+  background-size: cover;
+  background-position: center;
+  border-radius: 1rem 0 0 1rem;
+}
+
+.image-container {
+  display: grid;
+  width: 1000px;
+  height: 500px;
+  border-radius: 1rem;
+  gap: .5rem;
+  grid-template-areas:
+    "z z . ."
+    "z z . ."
+
+  ;
+}
+
+.spot-info-container {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 1rem;
+  padding-bottom: 2rem;
+  box-shadow: rgb(0 0 0 / 8%) 0 1px 0;
+
+}
+
+.spot-description {
+  display: flex;
+  flex-direction: column;
+}
+
+.spot-info {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 1px solid #ddd;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
+}
+
+.hosted-by {
+  color: #222;
+  margin-top: 0;
+}
+
+.rating-count {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  color: #222;
+}
+
+.rating {
+  display: flex;
+  gap: .25rem;
+}

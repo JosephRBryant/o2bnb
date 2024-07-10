@@ -1,0 +1,24 @@
+.reviews-list {
+  padding: 0;
+}
+
+.review-list-items {
+  list-style: none;
+}
+
+.user-review-name {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  margin: .5rem 0;
+}
+
+.review-list-items span {
+  margin: 0.5rem 0;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 300;
+}
+
+.review-list-items p {
+  margin: 0.5rem 0 3rem 0;
+  font-size: 0.875rem;
+}

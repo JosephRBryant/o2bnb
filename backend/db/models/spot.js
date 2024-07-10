@@ -164,8 +164,8 @@ module.exports = (sequelize, DataTypes) => {
           }
         },
         len: {
-          arg: [10, 240],
-          msg: 'Description must be less than 240 characters'
+          arg: [10, 1000],
+          msg: 'Description must be less than 1000 characters'
         }
       }
     },

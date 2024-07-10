@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { FaUserCircle } from 'react-icons/fa';
 import { RxHamburgerMenu } from "react-icons/rx";
@@ -11,6 +11,7 @@ import './ProfileButton.css';
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
   const ulRef = useRef();
 
@@ -34,12 +35,19 @@ function ProfileButton({ user }) {
     return () => document.removeEventListener('click', closeMenu);
   }, [showMenu]);
 
+  const goToManageSpots = (e) => {
+    e.preventDefault();
+    closeMenu();
+    navigate('/spots/current');
+  }
+
   const closeMenu = () => setShowMenu(false);
 
   const logout = (e) => {
     e.preventDefault();
     dispatch(sessionActions.logout());
     closeMenu();
+    navigate('/');
   };
 
   const btnClassName = 'profile-button' + (showMenu ? ' profile-button-active' : '')
@@ -58,7 +66,7 @@ function ProfileButton({ user }) {
             <li>Hello, {user.firstName}</li>
             <li>{user.email}</li>
             <li>
-              <Link onClick={console.log('click clack paddywhack')} className='link-no-styling'>Manage Spots</Link>
+              <Link onClick={goToManageSpots} className='link-no-styling'>Manage Spots</Link>
             </li>
             <li>
               <Link onClick={logout} className='link-no-styling' id='log-out-btn'>Log Out</Link>

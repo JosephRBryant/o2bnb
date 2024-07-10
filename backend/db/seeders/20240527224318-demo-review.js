@@ -13,42 +13,65 @@ module.exports = {
   async up (queryInterface, Sequelize) {
     try {
       await Review.bulkCreate([
-        {
-          userId: 1,
-          spotId: 3,
-          review: 'Best spot ever!',
-          stars: 5
-        },
-        {
-          userId: 2,
-          spotId: 1,
-          review: 'Worst spot ever!',
-          stars: 2
-        },
-        {
-          userId: 2,
-          spotId: 3,
-          review: 'Most decent spot ever!',
-          stars: 3
-        },
-        {
-          userId: 2,
-          spotId: 4,
-          review: 'Mediocre spot!',
-          stars: 4
-        },
-        {
-          userId: 3,
-          spotId: 1,
-          review: 'Not so bad!',
-          stars: 4
-        },
-        {
-          userId: 3,
-          spotId: 4,
-          review: 'Best spot that ever was!',
-          stars: 5
-        },
+        { userId: 2, spotId: 1, review: "Renovated house in good condition, cozy, and clean. Unfortunately during our visit the lake was too dirty for swimming so we cannot enjoy it (for me the most beautiful part of the house). The price is too high for the house, but the host was very helpful and responsive.", stars: 5 },
+        { userId: 3, spotId: 1, review: "Our family stayed at this beautiful lakehouse from June 9-15, 2024 and it was a fabulous week! With it's four bedrooms and three baths, it was the perfect size for all of us. Beautiful yet comfortable furnishings... a kitchen that had everything you would ever need... but I think our favorite parts were the upper and lower decks. The upper deck had a huge table with umbrella and BBQ pit, while the downstairs deck had comfortable seating to where you could have a lazy afternoon reading or walk right out and into the water for a lazy day on the floats or get into your boat and tour the lake. We brought our own lily pad float plus two kayaks so we were always in the water. There were two blowup tubs and two paddle boads that came with the house and we had those out every day. We all just had an amazing time and we wouldn't hesitate to stay there again! Elizabeth was an incredible host from the beginning when we reserved the house until our last day there.", stars: 4 },
+        { userId: 4, spotId: 1, review: "Will recommend to others.", stars: 4 },
+        { userId: 3, spotId: 2, review: "Ron's place is located on a more peaceful part of Lake Conroe with beautiful views! Condo is cozy and clean, with a comfortable bed, and fairly priced too... Grounds are well maintained with plenty of parking and lots of open grassy area to walk pets. It is also located just a few yards from The Southern Empress Paddle boat... Best part was fishing right from the patio! ..The condos were built in the 80's, with that in mind they are a bit outdated but well kept.", stars: 3 },
+        { userId: 4, spotId: 2, review: "There’s something peaceful about staying on the water and experiencing sunsets and sunrises. This home doesn’t disappoint. They were extremely quick to respond. My daughter wanted to fish while we were there. Our host went out of his way to pick up bait and drop it off for her to fish off the porch. She caught 4 sunfish (1 we threw back), and 2 catfish. He also picked up 2 larger size coffee cups because all they had were smaller ones (which I knew I would end up overflowing 😝), and more coffee. The bed and sofa was comfortable, and it’s so nice to wake up to such a pretty view too. Our dogs stayed looking out the windows and glass door the entire time we were there. We would book again!", stars: 4 },
+        { userId: 1, spotId: 3, review: "Jason was the most attentive of hosts at this Walden condo in Conroe. He really went above and beyond our stay to make sure that we were comfortable during our stay. Will gladly stay here again for lake tranquility. Thank you Jason!", stars: 5 },
+        { userId: 2, spotId: 3, review: "My husband and I loved staying at the Condo at Harbor Shores. Jason was friendly and a great host. The Condo was fully stocked. We needed to stay for a month while we looked for a house. I had absolutely no worries and at the end of the day I had a beautiful home to come back to. I hope we can rent again in the future.", stars: 4 },
+        { userId: 4, spotId: 3, review: 'Will visit again.', stars: 5 },
+        { userId: 1, spotId: 4, review: "The home was great. The pictures is an understatement. The house was gorgeous. Very peaceful and the right amount of space for my family. Elizabeth was very responsive and nice. Very clear instructions. 100% recommend this place.", stars: 4 },
+        { userId: 2, spotId: 4, review: "Condo was amazing with a beautiful view of Walden cove and was perfect for a great weekend of fishing and fun. I really like being able to dock my bass boat and be able to see if from condo. We will definitely book again!!", stars: 4 },
+        { userId: 3, spotId: 4, review: 'Wonderful experience.', stars: 5 },
+        { userId: 2, spotId: 5, review: "I really enjoyed my stay. I booked right before the freeze in Texas and it was worth it! Very quiet, neighbors were polite, the water was calming/peaceful to lay there and listen to, and the home was clean! Its very private, which makes it a great hide away and I will book again for my next getaway", stars: 4 },
+        { userId: 3, spotId: 5, review: 'Good value for money.', stars: 3 },
+        { userId: 4, spotId: 5, review: "Absolutely loved our stay, and so did our young children (age newborn to 5yr). The adults enjoyed fishing and the kayaks. This is our second stay and we honestly look forward to returning much sooner. The home was spotless, plenty of bathroom linens and relaxing bedrooms with a view. We felt right at home. Our stay was relaxing and we were not on our phones the whole stay! The neighborhood was quiet, and the morning drive to Starbucks you’d see deer walking around unbothered. If you crave a peaceful yet productive get away from home, this is your place. Also plenty to do around the area outdoors as well too", stars: 5 },
+        { userId: 1, spotId: 6, review: 'Lovely place.', stars: 4 },
+        { userId: 3, spotId: 6, review: "From the moment I got there Austin did an amazing job about staying in contact. I had a question that turned out to be an easy fix and he helped me quickly and politely, even took the initiative to volunteer addition information regarding our stay (tips about the house and the area). The place was very nice and outside was even better! Being on the lake was such a fun time and so peaceful. All of the houses in this are kind of on a cliff so be careful if you have young kids that will b-line to the water. Great stay, highly recommend!", stars: 3 },
+        { userId: 4, spotId: 6, review: "We were so gracious that Austin allowed us to stay in his home. His communication throughout the entirety of the stay was nothing like I ever experienced. It was Exceptional ! Any questions we had he was there to answer them expeditiously. The view at Austin’s place was amazing as it sits right on the water. The plus is the local wildlife that was passing though. It was so beautiful to see all the different animals just freely roaming. The check in and out process was super smooth and we could not be more thankful for the amazing hospitality!", stars: 4 },
+        { userId: 1, spotId: 7, review: "We loved staying at Austin's place. The views are lovely and we really enjoyed the outdoor spaces - especially the ping pong table and access to fishing. My son caught a huge catfish within 25 min of arriving! There are nice walks/hikes nearby. The BBQ place down the road was really good. And the beds were super comfy! This is good stay for 2 couples or a small family with older kids.", stars: 4 },
+        { userId: 2, spotId: 7, review: 'Well-maintained.', stars: 3 },
+        { userId: 4, spotId: 7, review: "Quiet neighborhood. Gorgeous view. We had a relaxing and peaceful stay. Close to lake. The kayaks and hot tub were great. We will be back", stars: 5 },
+        { userId: 1, spotId: 8, review: "Our stay was absolutely perfect after celebrating our elopement. Austin and his team delivered a gorgeous home with amenities galore. The kayaks and fishing were just the cherry on top of the deer watching, hot tub, and the awesome hammock chair on the main deck. I even went so far as to suggesting to our extended family that we make Lake Robins Nest one of the options for our annual summer vacation in Central Texas! We can’t wait to be return renters……. And finally catch that huge bass that we chased all weekend!", stars: 5 },
+        { userId: 2, spotId: 8, review: "We absolutely loved staying here. Had everything we needed in the house and was close to our family who have a place nearby. So much fun at the lake and the community pool! We are ready to book another trip. Mrs.Kay was very helpful during our stay. Wish we didn’t have to leave!", stars: 4 },
+        { userId: 3, spotId: 8, review: "Beautiful home! We loved all of the little extras like coffee, paper towels, cleaning supplies, even laundry soap. The place was perfect as we were visiting relatives in Holiday Villages. We would definitely stay again although I see it is for sale now. Thank you Kay for the great communication as well. 5 Stars all around!!!!", stars: 4 },
+        { userId: 2, spotId: 9, review: "Our stay with Kay went beyond our expectations, based on the welcome feeling of the home and Kay. We felt so comfortable, peaceful, and welcome. This home was bright, clutter-free, modern, relaxing, and clean. Our view was wonderful. Everything we needed had been anticipated and worked for our meal prep and cleaning. Furniture, beds, and linens were comfy, and nights were quiet. The neighborhood was a hidden gem, with rolling hills, kind people, beautiful nature, and quirky-cute. We had such a good time we are considering owning a home here.", stars: 3 },
+        { userId: 3, spotId: 9, review: "Very friendly and flexible with our needs. great location by the dock and has a beautiful home!", stars: 4 },
+        { userId: 4, spotId: 9, review: 'Will recommend to others.', stars: 5 },
+        { userId: 1, spotId: 10, review: "Mr kevin went above and beyond! He had breakfast in the fridge for us to cook, he knew i was bringing my nephew and son so there were little boxes of cereal for them . It was clean and tidy , he had a list of clear instructions on what was provided . He personally welcomed us with open arms. He allowed us to check in early and hang around sunday evening as long as we wanted . God bless Mr Kevin!!!", stars: 4 },
+        { userId: 3, spotId: 10, review: "Great visit. Kevin was responsive and helpful through my visit. He was personable and great to work with. Would come again!", stars: 4 },
+        { userId: 4, spotId: 10, review: 'Loved the stay.', stars: 5 },
+        { userId: 1, spotId: 11, review: "The cabin has everything you need. It's comfortable and cozy with beautiful views of the lake. Kevin goes beyond being helpful and is available for any questions. Enjoy your stay get your lake vibes on!", stars: 4 },
+        { userId: 2, spotId: 11, review: 'Good for the price.', stars: 3 },
+        { userId: 4, spotId: 11, review: "He is a great host. Very detailed instructions about everything. Size of the house my night be exactly what means suitable for 6 people. But overall a great experience and view. Just pay attention to the expiration date on stuff in the refrigerator.", stars: 5 },
+        { userId: 1, spotId: 12, review: "Love Love Love everything about Kevin’s Airbnb! My Favorite was just sitting on the Deck watching others Jet Ski and Fishing!", stars: 5 },
+        { userId: 2, spotId: 12, review: "Great location with convenient amenities! Cabin was very clean and fully stocked with all the necessities. Breakfast was also provided for the first morning which was great!", stars: 4 },
+        { userId: 3, spotId: 12, review: 'Had a great experience.', stars: 5 },
+        { userId: 2, spotId: 13, review: "We stayed here after a wedding at a nearby venue. Kevin was super helpful! Although our trip was short, we had a great time.", stars: 4 },
+        { userId: 3, spotId: 13, review: "Best airbnb we have ever rented. We have rented several in this community, but this one was by far the best. The host had breakfast, coffee, snacks, toiletries, and everything ready for us - he. thought of everything. He had air conditioners in each area so everyone could have their personal comfort. Beds and furniture were comfortable and in good condition. The place was super clean. We will definitely rent this one again.", stars: 4 },
+        { userId: 4, spotId: 13, review: 'Awesome place.', stars: 5 },
+        { userId: 1, spotId: 14, review: 'Loved the ambiance.', stars: 4 },
+        { userId: 3, spotId: 14, review: "The place was perfect,it was well keep and very nice.I loved it!it was the perfect amount of space and right on the water,which was a plus!Kevin was very accommodating and super nice.Will be back soon!", stars: 5 },
+        { userId: 4, spotId: 14, review: "If you want a water view and fishing, the location of this house is PERFECT! The house is super comfortable and accommodated our group just fine. The back deck was wide enough for us to hang out and listen to the crickets and bullfrogs serenade us.😁 The beds were plush and comfortable. Kevin made sure we had breakfast in the fridge. He provided eggs, bacon, bread, orange juice and milk. We had a blast!", stars: 5 },
+        { userId: 1, spotId: 15, review: "The hospitality at kevins cozy cottage is outstanding and lacking nothing. The cottage itself was very clean, and had enough room for everyone. It has all the ammenities you would need and then some. Nice peaceful back porch setting on the lake. Did i mention the hospitality? It is second to none and we were all impressed with everything overall. We will definately be staying here again. I recommend this place to anyone looking for a nice cozy getaway!", stars: 4 },
+        { userId: 2, spotId: 15, review: "We were given a tour... very generous items provided to you during your stay. Extremely comfortable beds. Too cold though.", stars: 4 },
+        { userId: 4, spotId: 15, review: 'Enjoyed my time here.', stars: 5 },
+        { userId: 1, spotId: 16, review: "The Canal House was great for my husband and I. It was peaceful and the neighbors are super friendly and there if you need them, but unfortunately we did not need them during our stay. Patti the host was wonderful and very responsive and was able to answer any questions I had. The rental was very affordable which was amazing especially when needing to get away with everything going up. Thanks Patti, your home is wonderful and well appreciated!!!!!", stars: 4 },
+        { userId: 2, spotId: 16, review: "It was very peaceful and it was exactly what we needed ..Patti and her husband responded very quickly if we needed anything or had a question..The neighbors Crystal and her husband are absolutely amazing and I miss them already..They too are very very helpful with everything ! I would and will be coming back in the future!", stars: 4 },
+        { userId: 3, spotId: 16, review: "This place was quiet and serene. The amenities were amazing and the view of the canal was beautiful!", stars: 5 },
+        { userId: 2, spotId: 17, review: "We stayed 3 months—Jan 5-April 5. Heating and cooling were both used and worked wonderfully. Crystal and Rick are great neighbors and very helpful! We were very happy there.", stars: 4 },
+        { userId: 3, spotId: 17, review: "It was the best time for myself and my fiancée . We never get time without our boys and it was last minute . I expressed my plans to Patti and she shared that there are pots pans etc . Putting my mind at ease that the night was going to be lovely . The house has a vibe that is filled with love you can feel right at home when you walk in . Thank you Patti ! He was very surprised and the night was so well deserved . We played Christmas music on the tv with a beautiful display of a Christmas tree , chimney , tulips in Christmas colors . Absolutely a wonderful night ! Thanks again", stars: 4 },
+        { userId: 4, spotId: 17, review: 'Highly recommended.', stars: 5 },
+        { userId: 1, spotId: 18, review: "Great as advertised, very peaceful and relaxing, would recommend absolutely!", stars: 4 },
+        { userId: 3, spotId: 18, review: "We rented this place for relatives to come visit during the holidays. It is so cozy with a screened in porch to sit in or grill in. And such a peaceful view, right on a canal. We will be renting this again.", stars: 3 },
+        { userId: 4, spotId: 18, review: "I stayed at Patti’s place for some R and R and it was exactly what I needed! The furnishings are comfy and just make you feel at home. I found everything I needed in the kitchen and bathrooms. The bed was comfy and the rocker in the living room is the most comfortable chair I’ve ever sat in! I will definitely be a repeat stayer!!", stars: 4 },
+        { userId: 1, spotId: 19, review: "This was our second stay and we enjoyed it again. VERY close to stow-a-way marina. On the water, great view and nice neighbors.", stars: 4 },
+        { userId: 2, spotId: 19, review: "This was our 7th time staying there. We are long term repeat customers", stars: 4 },
+        { userId: 4, spotId: 19, review: 'Would stay here again.', stars: 5 },
+        { userId: 1, spotId: 20, review: "Cant wait to stay again, very clean and comfy. Perfect place to unplug and relax. love the garden tub and the back porch over looking the canal.", stars: 5 },
+        { userId: 2, spotId: 20, review: "Our favorite place for peace, quiet, and good fishing! Always clean, always comfortable! Thanks for another great weekend! We'll be back!", stars: 4 },
+        { userId: 3, spotId: 20, review: "We found this place sort of last minute. It was definitely a fair price and worth what she charges! It’s not super high-tech or elegant, but it’s clean and quiet. Served our purpose perfectly. We were just 3 guys doing a little relaxation and fishing. It would be nice to upgrade the BBQ grill, it wasn’t usable. And, a fire-pit out back by the canal would be nice also. But these were just small issues. We caught several catfish in the canal. Overall we definitely recommend this place for a peaceful stay.", stars: 4 }
       ], { validate: true })
     } catch(error) {
       console.error('Error during seeding of reviews');
