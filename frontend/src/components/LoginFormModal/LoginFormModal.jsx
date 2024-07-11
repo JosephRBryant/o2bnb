@@ -57,8 +57,8 @@ function LoginFormModal() {
   return (
     <div className="loginForm">
       <h1 className="login-header">Log In</h1>
-      <div className="credentials-error">
-        <h2>{loginError}</h2>
+      <div className="credentials-error-container">
+        <h2 className="credentials-error">{loginError}</h2>
       </div>
       <form onSubmit={handleSubmit}>
         <input

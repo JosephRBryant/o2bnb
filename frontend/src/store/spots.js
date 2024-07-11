@@ -1,6 +1,9 @@
+import { csrfFetch } from './csrf';
+
 const GET_ALL_SPOTS = 'spots/getAllSpots';
 const GET_SPOT_DETAILS = 'spots/getSpotDetails';
 const GET_USER_SPOTS = 'spots/getUserSpots';
+const CREATE_SPOT = 'spots/createSpot';
 
 const getAllSpots = (spots) => {
   return {
@@ -23,9 +26,16 @@ const getUserSpots = (userSpots) => {
   }
 }
 
+const createSpot = (spot) => {
+  return {
+    type: CREATE_SPOT,
+    payload: spot
+  }
+}
+
 export const getAllSpotsThunk = () => async (dispatch) => {
   try {
-    const res = await fetch('/api/spots');
+    const res = await csrfFetch('/api/spots');
     if (res.ok) {
       const data = await res.json();
       dispatch(getAllSpots(data))
@@ -39,7 +49,7 @@ export const getAllSpotsThunk = () => async (dispatch) => {
 
 export const getSpotDetailsThunk = (spotId) => async (dispatch) => {
   try {
-    const res = await fetch(`/api/spots/${spotId}`);
+    const res = await csrfFetch(`/api/spots/${spotId}`);
 
     if (res.ok) {
       // step 5
@@ -55,13 +65,37 @@ export const getSpotDetailsThunk = (spotId) => async (dispatch) => {
 
 export const getUserSpotsThunk = (userId) => async (dispatch) => {
   try {
-    console.log('thunk working');
-    const res = await fetch(`/api/spots/current`);
+    const res = await csrfFetch(`/api/spots/current`);
     if (res.ok) {
       const data = await res.json();
+      console.log('user spots', data);
       dispatch(getUserSpots(data))
     } else {
       throw res
+    }
+  } catch (error) {
+    return error;
+  }
+}
+
+export const createSpotThunk = (spotForm) => async (dispatch) => {
+  try {
+    console.log('in create thunk');
+    const options = {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(spotForm)
+    }
+
+    const res = await csrfFetch('/api/spots', options);
+
+    if (res.ok) {
+      const data = await res.json();
+      console.log('create thunk data', data);
+      await dispatch(createSpot(data));
+      return res;
+    } else {
+      throw res;
     }
   } catch (error) {
     return error;
@@ -102,6 +136,11 @@ const spotsReducer = (state = initialState, action) => {
       for (let spot of action.payload.Spots) {
         newState.byId[spot.id] = spot
       }
+      return newState;
+    case CREATE_SPOT:
+      newState = {...state};
+      newState.allSpots = [action.payload, ...newState.allSpots];
+      newState.byId = {...newState.byId, [action.payload.id]: action.payload};
       return newState;
     default:
       return state;

@@ -1,11 +1,15 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import spotsReducer, { getUserSpotsThunk } from '../../store/spots';
 import SpotTile from '../../components/Spots';
 import './ManageSpots.css';
+import { useNavigate } from 'react-router-dom';
+import { restoreUser } from '../../store/session';
 
 const ManageSpot = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [isLoaded, setIsLoaded] = useState(false);
   let userSpots = useSelector(state => state.spotState.userSpots);
   const sessionUser = useSelector(state => state.session.user);
@@ -15,21 +19,32 @@ const ManageSpot = () => {
       await dispatch(getUserSpotsThunk(sessionUser.id));
       setIsLoaded(true)
     }
+    if (sessionUser && !sessionUser.id) {
+      const getUser = async () => {
+        await dispatch(restoreUser())
+      }
+      getUser();
+    }
     if (!isLoaded) {
       getData()
     }
-  },[dispatch, isLoaded, sessionUser.id])
+  },[dispatch, isLoaded, sessionUser])
 
-  if (!userSpots) {
+  const goToCreateSpot = (e) => {
+    e.preventDefault();
+    navigate('/spots/new');
+  }
+
+  if (!isLoaded) {
     return <h1>Loading...</h1>
   }
   return (
-    <>
+    <main className='manage-spots-main'>
       <header>
         <h1>Manage your Spots</h1>
-        <button className="create-new-spot" onSubmit={() => null}>Create a New Spot</button>
+        <Link className="create-new-spot" onClick={goToCreateSpot}>Create a New Spot</Link>
       </header>
-      <main className='manage-spots'>
+      <div className='manage-spots'>
         {userSpots.map((spot, idx) => (
           <div key={`${idx}-${spot.name}`} className="spot-tile" data-tooltip={spot.name}>
             <SpotTile spot={spot}/>
@@ -39,8 +54,8 @@ const ManageSpot = () => {
             </div>
           </div>
         ))}
-      </main>
-    </>
+      </div>
+    </main>
   )
 }
 

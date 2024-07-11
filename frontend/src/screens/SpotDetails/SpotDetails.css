@@ -8,7 +8,13 @@ header {
 .spot-detail-main {
   display: flex;
   flex-direction: column;
-  width: 100% !important;
+  align-items: center;
+}
+
+.spot-detail-container {
+  display: flex;
+  flex-direction: column;
+  width: 1000px;
   height: auto !important;
   gap: 1rem !important;
 }

@@ -6,7 +6,7 @@ import './Navigation.css';
 function Navigation({ isLoaded }){
   const sessionUser = useSelector(state => state.session.user);
   return (
-    <nav>
+    <nav className='nav-bar'>
       <ul className='nav-list'>
         <li>
           <NavLink className='home' to="/">

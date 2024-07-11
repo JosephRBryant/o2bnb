@@ -75,7 +75,7 @@ router.get('/', queryParams, async (req, res, next) => {
       }})    }
 
     if (!page) page = 1;
-    if (!size) size = 20;
+    if (!size) size = 30;
     if (typeof Number(page) !== 'number') {
 
     }
@@ -83,7 +83,7 @@ router.get('/', queryParams, async (req, res, next) => {
     size = Number(size);
 
     if (page > 10) page = 10;
-    if (size > 20) size = 20;
+    if (size > 30) size = 30;
     let pagination = {};
     pagination.limit = size;
     pagination.offset = (page - 1) * size;
@@ -115,7 +115,7 @@ router.get('/', queryParams, async (req, res, next) => {
         {model: Review},
         {model: SpotImage}
       ],
-      ...pagination
+      // ...pagination
     });
 
     let spots = [];
@@ -415,7 +415,6 @@ router.post('/', requireAuth, handleValidationErrors, async (req, res, next) => 
     }
   } catch(error) {
     error.message = "Bad Request";
-    console.error('console.error error===============', error)
     error.status = 400;
     next(error)
   }
