@@ -74,11 +74,15 @@ module.exports = (sequelize, DataTypes) => {
           msg: 'State is required'
         },
         isString(value) {
-          if (typeof value !== 'string') {
+          if (Number(value)) {
             throw new Error('State must be letters')
           }
         },
-        len: [3, 30]
+        isRightLength(value) {
+          if (value.length < 3 || value.length > 30) {
+            throw new Error('State needs between 3 and 30 characters')
+          }
+        }
       }
     },
     country: {
@@ -90,8 +94,13 @@ module.exports = (sequelize, DataTypes) => {
           msg: 'Country is required'
         },
         isString(value) {
-          if (typeof value !== 'string') {
+          if (Number(value)) {
             throw new Error('Country must be letters')
+          }
+        },
+        isRightLength(value) {
+          if (value.length < 3 || value.length > 30) {
+            throw new Error('Country needs between 3 and 30 characters')
           }
         }
       }

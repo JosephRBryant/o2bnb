@@ -55,7 +55,7 @@ function LoginFormModal() {
   console.log('login errors', errors);
 
   return (
-    <div className="loginForm">
+    <div className="login-form">
       <h1 className="login-header">Log In</h1>
       <div className="credentials-error-container">
         <h2 className="credentials-error">{loginError}</h2>

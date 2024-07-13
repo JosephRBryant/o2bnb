@@ -28,6 +28,16 @@ p {
   font-family: 'Roboto', sans-serif;
 }
 
+form input {
+  height: 2rem;
+  font-size: 1rem;
+  font-family: 'Roboto', sans-serif;
+  padding: 0 .5rem;
+  background-color: #E7F0FE;
+  border: 2px solid #222;
+  border-radius: .25rem;
+}
+
 .link-no-styling {
   text-decoration: none;
   color: #000;
