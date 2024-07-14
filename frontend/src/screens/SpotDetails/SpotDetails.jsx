@@ -49,12 +49,12 @@ const SpotDetails = () => {
   }
 
   return (
-    <>
+    <main className="spot-detail-main">
       <header>
         <h1>{spotDetails.name}</h1>
         <p>{`${spotDetails.city}, ${spotDetails.state}, ${spotDetails.country}`}</p>
       </header>
-      <main className="spot-detail-main">
+      <div className="spot-detail-container">
         <div className="image-container">
           <div className="prev-img" style={{backgroundImage: `url(${previewImage.url})`}}></div>
           <div className="thumb-img img-a" style={{backgroundImage: `url(${spotImages[1].url})`}}></div>
@@ -82,8 +82,8 @@ const SpotDetails = () => {
           </h2>
           <ReviewListing />
         </div>
-      </main>
-    </>
+      </div>
+    </main>
   )
 }
 

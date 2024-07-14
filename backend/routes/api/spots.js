@@ -75,7 +75,7 @@ router.get('/', queryParams, async (req, res, next) => {
       }})    }
 
     if (!page) page = 1;
-    if (!size) size = 20;
+    if (!size) size = 30;
     if (typeof Number(page) !== 'number') {
 
     }
@@ -83,7 +83,7 @@ router.get('/', queryParams, async (req, res, next) => {
     size = Number(size);
 
     if (page > 10) page = 10;
-    if (size > 20) size = 20;
+    if (size > 30) size = 30;
     let pagination = {};
     pagination.limit = size;
     pagination.offset = (page - 1) * size;
@@ -115,7 +115,7 @@ router.get('/', queryParams, async (req, res, next) => {
         {model: Review},
         {model: SpotImage}
       ],
-      ...pagination
+      // ...pagination
     });
 
     let spots = [];
@@ -399,8 +399,23 @@ router.post('/', requireAuth, handleValidationErrors, async (req, res, next) => 
   try {
     const { user } = req;
     if (user) {
-      const { address, city, state, country, lat, lng, name, description, price } = req.body;
+      const { address, city, state, country, lat, lng, name, description, price, previewImage, imageA, imageB, imageC, imageD } = req.body;
       let spot = await Spot.create({ ownerId: user.id, address, city, state, country, lat, lng, name, description, price });
+
+      let prevImg = await SpotImage.create({ spotId: spot.id, url: previewImage, preview: true });
+
+      if (imageA) {
+        let imgA = await SpotImage.create({ spotId: spot.id, url: imageA, preview: false });
+      }
+      if (imageB) {
+        let imgB = await SpotImage.create({ spotId: spot.id, url: imageB, preview: false });
+      }
+      if (imageC) {
+        let imgC = await SpotImage.create({ spotId: spot.id, url: imageC, preview: false });
+      }
+      if (imageD) {
+        let imgD = await SpotImage.create({ spotId: spot.id, url: imageD, preview: false });
+      }
 
       spot = spot.toJSON();
       spot.createdAt = formatDateTime(spot.createdAt);
@@ -408,6 +423,7 @@ router.post('/', requireAuth, handleValidationErrors, async (req, res, next) => 
       spot.lat = Number(spot.lat);
       spot.lng = Number(spot.lng);
       spot.price = Number(spot.price);
+
       res.status(201);
       return res.json(spot);
     } else {
@@ -415,7 +431,6 @@ router.post('/', requireAuth, handleValidationErrors, async (req, res, next) => 
     }
   } catch(error) {
     error.message = "Bad Request";
-    console.error('console.error error===============', error)
     error.status = 400;
     next(error)
   }
@@ -432,7 +447,7 @@ router.post('/:spotId/images', handleValidationErrors, requireAuth, async (req, 
     // does spot exist
     let spotExists = await Spot.findByPk(spotId);
     if (!spotExists) {
-      res.status(404).json({"message": "Spot couldn't be found"})
+        return res.status(404).json({"message": "Spot couldn't be found"})
     }
 
     // find user spots
@@ -445,7 +460,7 @@ router.post('/:spotId/images', handleValidationErrors, requireAuth, async (req, 
     // does the spot belong to the user
     let isUserSpot = false;
     userSpots.forEach((spot) => {
-      if (spot.id === spotId) {
+      if (spot.dataValues.id === spotId) {
         isUserSpot = true;
       }
     });
@@ -454,6 +469,7 @@ router.post('/:spotId/images', handleValidationErrors, requireAuth, async (req, 
       const image = await SpotImage.create({spotId, url, preview});
       const imageRes = {
         id: image.id,
+        spotId: spotId,
         url: image.url,
         preview: image.preview
       }
@@ -474,14 +490,14 @@ router.post('/:spotId/images', handleValidationErrors, requireAuth, async (req, 
           spotImagePreview[0].set({
             preview
           });
-          spotImagePreview[0].save();
+          await spotImagePreview[0].save();
         }
 
       }
       res.status(201);
       return res.json(imageRes)
     } else {
-      res.status(403).json({message: "Forbidden"})
+      return res.status(403).json({message: "Forbidden"})
     }
   } catch (error) {
     error.status = 404;

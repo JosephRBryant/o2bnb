@@ -36,17 +36,24 @@ module.exports = (sequelize, DataTypes) => {
     address: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: {
+        arg: true,
+        msg: 'Address already in use'
+      },
       validate: {
         notNull: {
           arg: true,
           msg: 'Street address is required'
         },
-        isString(value) {
-          if (typeof value !== 'string') {
-            throw new ValidationError('Street address must be letters')
+        isValidAddress(value) {
+          if (!value) {
+            throw new Error('Street address is required')
+          } else if (Number(value)) {
+            throw new Error('Street address must be letters')
+          } else if (value.length < 3 || value.length > 30) {
+            throw new Error('Street address must be between 3 and 30 characters')
           }
         },
-        len: [5, 50]
       }
     },
     city: {
@@ -57,12 +64,15 @@ module.exports = (sequelize, DataTypes) => {
           arg: true,
           msg: 'City is required'
         },
-        isString(value) {
-          if (typeof value !== 'string') {
+        isValidCity(value) {
+          if (!value) {
+            throw new Error('City is required')
+          } else if (Number(value)) {
             throw new Error('City must be letters')
+          } else if (value.length < 3 || value.length > 30) {
+            throw new Error('City must be between 3 and 30 characters')
           }
         },
-        len: [3, 30]
       }
     },
     state: {
@@ -73,12 +83,15 @@ module.exports = (sequelize, DataTypes) => {
           arg: true,
           msg: 'State is required'
         },
-        isString(value) {
-          if (typeof value !== 'string') {
+        isValidState(value) {
+          if (!value) {
+            throw new Error('State is required')
+          } else if (Number(value)) {
             throw new Error('State must be letters')
+          } else if (value.length < 3 || value.length > 30) {
+            throw new Error('Do not abbreviate')
           }
         },
-        len: [3, 30]
       }
     },
     country: {
@@ -89,11 +102,15 @@ module.exports = (sequelize, DataTypes) => {
           arg: true,
           msg: 'Country is required'
         },
-        isString(value) {
-          if (typeof value !== 'string') {
+        isValidCountry(value) {
+          if (!value) {
+            throw new Error('Country is required')
+          } else if (Number(value)) {
             throw new Error('Country must be letters')
+          } else if (value.length < 3 || value.length > 30) {
+            throw new Error('Country must be between 3 and 30 characters')
           }
-        }
+        },
       }
     },
     lat: {
@@ -104,10 +121,19 @@ module.exports = (sequelize, DataTypes) => {
           arg: true,
           msg: 'Latitude is required'
         },
-        isValidDecimal(value) {
-          let numString = JSON.stringify(value);
-          let numArr = numString.split('.');
-          if (numArr[0].length >= 5 || numArr[1].length !== 7) {
+        isValidLat(value) {
+          let num = Number(value);
+          let numArr = JSON.stringify(value).split('.');
+          if (!value) {
+            throw new Error('Latitude is required')
+          } else if (
+              Number.isInteger(num) ||
+              !Number(value) ||
+              numArr.length !== 2 ||
+              num < -90 ||
+              num > 90 ||
+              numArr[1].length !== 7
+            ) {
             throw new Error('Latitude is not valid')
           }
         }
@@ -121,10 +147,19 @@ module.exports = (sequelize, DataTypes) => {
           arg: true,
           msg: 'Longitude is required'
         },
-        isValidDecimal(value) {
-          let numString = JSON.stringify(value);
-          let numArr = numString.split('.');
-          if (numArr[0].length >= 5 || numArr[1].length !== 7) {
+        isValidLng(value) {
+          let num = Number(value);
+          let numArr = JSON.stringify(value).split('.');
+          if (!value) {
+            throw new Error('Latitude is required')
+          } else if (
+              Number.isInteger(num) ||
+              !Number(value) ||
+              numArr.length !== 2 ||
+              num < -180 ||
+              num > 180 ||
+              numArr[1].length !== 7
+            ) {
             throw new Error('Longitude is not valid')
           }
         }
@@ -133,21 +168,24 @@ module.exports = (sequelize, DataTypes) => {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: {
+        arg: true,
+        msg: 'Name already in use'
+      },
       validate: {
         notNull: {
           arg: true,
           msg: 'Name is required'
         },
-        isString(value) {
-          if (typeof value !== 'string') {
-            throw new Error('Name must be letters')
+        isValidName(value) {
+          if (!value) {
+            throw new Error('Title is required')
+          } else if (Number(value)) {
+            throw new Error('Title must be letters')
+          } else if (value.length < 3 || value.length > 30) {
+            throw new Error('Title must be between 3 and 30 characters')
           }
         },
-        isLessThan(value) {
-          if (value.length >= 50) {
-            throw new Error('Name must be less than 50 characters')
-          }
-        }
       }
     },
     description: {
@@ -158,15 +196,16 @@ module.exports = (sequelize, DataTypes) => {
           arg: true,
           msg: 'Description is required'
         },
-        isString(value) {
-          if (typeof value !== 'string') {
+        isValidDescription(value) {
+          if (!value) {
+            throw new Error('Description is required')
+          } else if (Number(value)) {
             throw new Error('Description must be letters')
+          } else if (value.length < 30) {
+            console.log(value.length);
+            throw new Error('Description must be 30 characters or more')
           }
         },
-        len: {
-          arg: [10, 1000],
-          msg: 'Description must be less than 1000 characters'
-        }
       }
     },
     price: {
@@ -175,20 +214,15 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         notNull: {
           arg: true,
-          msg: 'Price per day is required'
+          msg: 'Price per night is invalid'
         },
-        isValidDecimal(value) {
-          if (typeof value !== 'number') {
-            throw new Error('Price per day is required')
+        isValidPrice(value) {
+          if (!value) {
+            throw new Error('Price per night is required')
+          } else if (!Number(value)) {
+            throw new Error('Price is invalid')
           }
-          let numString = JSON.stringify(value);
-          if (numString.includes('.')) {
-            let numArr = numString.split('.');
-            if (numArr[0].length >= 5 || numArr[1].length !== 2) {
-              throw new Error('Price per day is required')
-            }
-          }
-        }
+        },
       }
     }
   }, {
