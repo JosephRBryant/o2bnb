@@ -99,6 +99,13 @@ export const createSpotThunk = (spotForm) => async (dispatch) => {
       imageD
     }
 
+    for (let data in spotData) {
+      if (data === undefined || data === '') {
+        delete spotData[data]
+      }
+    }
+    console.log('spotdata before dispatch', spotData);
+
     const images = {
       previewImage: previewImage,
       imageA: imageA,
@@ -107,6 +114,7 @@ export const createSpotThunk = (spotForm) => async (dispatch) => {
       imageD: imageD
     }
 
+    console.log('spotData object in thunk',  spotData);
     console.log('images object in thunk',  images);
 
     const options = {
@@ -122,36 +130,13 @@ export const createSpotThunk = (spotForm) => async (dispatch) => {
       await dispatch(createSpot(data));
       return data;
     } else {
+      console.log('res json', res.json());
       throw res;
     }
   } catch (error) {
     return error;
   }
 }
-
-// export const createSpotImageThunk = (image, spotId) => async (dispatch) => {
-//   try {
-//     console.log('start of createSpotImageThunk');
-//     const options = {
-//       method: 'POST',
-//       headers: {'Content-Type': 'application/json'},
-//       body: JSON.stringify(image)
-//     }
-
-//     const res = await csrfFetch(`/api/spots/${spotId}/images`, options);
-
-//     if (res.ok) {
-//       const data = await res.json();
-//       console.log('create spot img data', data);
-//       await dispatch(createSpotImage(data));
-//       return res;
-//     } else {
-//       throw res;
-//     }
-//   } catch (error) {
-//     return error;
-//   }
-// }
 
 const initialState = {
   allSpots: [],
