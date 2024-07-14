@@ -1,3 +1,31 @@
+.profile-create-btns {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.create-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 2rem;
+  width: 9.25rem;
+  border-radius: .5rem;
+  border: none;
+  background-color: #2196F3;
+  color: #fff;
+  font-family: 'Roboto', sans-serif;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: bold;
+  letter-spacing: .05rem;
+  cursor: pointer;
+}
+
+.create-btn:hover {
+  background-color: #1883dc;
+}
+
 .profile-button {
   display: flex;
   align-items: center;

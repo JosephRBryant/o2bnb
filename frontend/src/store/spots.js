@@ -4,6 +4,7 @@ const GET_ALL_SPOTS = 'spots/getAllSpots';
 const GET_SPOT_DETAILS = 'spots/getSpotDetails';
 const GET_USER_SPOTS = 'spots/getUserSpots';
 const CREATE_SPOT = 'spots/createSpot';
+const DELETE_SPOT = 'spots/deleteSpot';
 
 const getAllSpots = (spots) => {
   return {
@@ -30,6 +31,13 @@ const createSpot = (spot) => {
   return {
     type: CREATE_SPOT,
     payload: spot
+  }
+}
+
+const deleteSpot = (deletedSpot) => {
+  return {
+    type: DELETE_SPOT,
+    payload: deletedSpot
   }
 }
 
@@ -101,37 +109,49 @@ export const createSpotThunk = (spotForm) => async (dispatch) => {
 
     for (let data in spotData) {
       if (data === undefined || data === '') {
+        console.log('data missing or undefined', data);
         delete spotData[data]
       }
     }
-    console.log('spotdata before dispatch', spotData);
-
-    const images = {
-      previewImage: previewImage,
-      imageA: imageA,
-      imageB: imageB,
-      imageC: imageC,
-      imageD: imageD
-    }
-
-    console.log('spotData object in thunk',  spotData);
-    console.log('images object in thunk',  images);
 
     const options = {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(spotData)
     }
-    const res = await csrfFetch('/api/spots', options);
+
+    let res = {}
+    if (spotData.previewImage) {
+      res = await csrfFetch('/api/spots', options);
+    }
 
     if (res.ok) {
       const data = await res.json();
-      console.log('create spot thunk data in res.ok if', data);
       await dispatch(createSpot(data));
       return data;
     } else {
-      console.log('res json', res.json());
       throw res;
+    }
+  } catch (error) {
+    return error;
+  }
+}
+
+export const deleteSpotThunk = (spot) => async (dispatch) => {
+  try {
+    const options = {
+      method: 'DELETE',
+      header: {'Content-Type': 'application/json'},
+      body: JSON.stringify(spot)
+    };
+
+    const res = await csrfFetch(`/api/spots/${spot.id}`, options);
+
+    if (res.ok) {
+      const data = await res.json();
+      dispatch(deleteSpot(data))
+    } else {
+      throw res
     }
   } catch (error) {
     return error;
