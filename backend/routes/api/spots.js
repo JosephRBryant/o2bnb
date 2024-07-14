@@ -400,14 +400,22 @@ router.post('/', requireAuth, handleValidationErrors, async (req, res, next) => 
     const { user } = req;
     if (user) {
       const { address, city, state, country, lat, lng, name, description, price, previewImage, imageA, imageB, imageC, imageD } = req.body;
-      console.log('Create Spot API req.body', req.body);
       let spot = await Spot.create({ ownerId: user.id, address, city, state, country, lat, lng, name, description, price });
-      // then Image.create
+
       let prevImg = await SpotImage.create({ spotId: spot.id, url: previewImage, preview: true });
-      let imgA = await SpotImage.create({ spotId: spot.id, url: imageA, preview: false });
-      let imgB = await SpotImage.create({ spotId: spot.id, url: imageB, preview: false });
-      let imgC = await SpotImage.create({ spotId: spot.id, url: imageC, preview: false });
-      let imgD = await SpotImage.create({ spotId: spot.id, url: imageD, preview: false });
+
+      if (imageA) {
+        let imgA = await SpotImage.create({ spotId: spot.id, url: imageA, preview: false });
+      }
+      if (imageB) {
+        let imgB = await SpotImage.create({ spotId: spot.id, url: imageB, preview: false });
+      }
+      if (imageC) {
+        let imgC = await SpotImage.create({ spotId: spot.id, url: imageC, preview: false });
+      }
+      if (imageD) {
+        let imgD = await SpotImage.create({ spotId: spot.id, url: imageD, preview: false });
+      }
 
       spot = spot.toJSON();
       spot.createdAt = formatDateTime(spot.createdAt);
@@ -415,8 +423,8 @@ router.post('/', requireAuth, handleValidationErrors, async (req, res, next) => 
       spot.lat = Number(spot.lat);
       spot.lng = Number(spot.lng);
       spot.price = Number(spot.price);
+
       res.status(201);
-      // res.redirect(`/${spot.id}`);
       return res.json(spot);
     } else {
       res.status(400).json({message: 'User must be logged in to create spot!'})

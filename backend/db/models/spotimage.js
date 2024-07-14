@@ -24,12 +24,18 @@ module.exports = (sequelize, DataTypes) => {
     },
     url: {
       type: DataTypes.STRING,
-      allowNull: false,
       unique: true
     },
     preview: {
       type: DataTypes.BOOLEAN,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        isPreview(value) {
+          if (value && !this.url.length) {
+            throw new Error('Preview image is required')
+          }
+        }
+      }
     }
   }, {
     sequelize,
