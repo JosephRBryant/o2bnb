@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { FaUserCircle } from 'react-icons/fa';
 import { RxHamburgerMenu } from "react-icons/rx";
 import * as sessionActions from '../../store/session';
@@ -50,16 +50,24 @@ function ProfileButton({ user }) {
     navigate('/');
   };
 
-  const btnClassName = 'profile-button' + (showMenu ? ' profile-button-active' : '')
+  const goToCreateSpot = (e) => {
+    e.preventDefault();
+    navigate('/spots/new');
+  }
 
+  const createBtnClassName = 'create-btn' + (user ? '' : ' hidden')
+  const btnClassName = 'profile-button' + (showMenu ? ' profile-button-active' : '')
   const ulClassName = "profile-dropdown" + (showMenu ? " profile-button-active" : " hidden");
 
   return (
     <>
-      <button className={btnClassName} onClick={toggleMenu}>
-        <RxHamburgerMenu className='profile-hamburger'/>
-        <FaUserCircle className='profile-image'/>
-      </button>
+      <div className="profile-create-btns">
+        <button className={createBtnClassName} onClick={goToCreateSpot}>Create a Spot</button>
+        <button className={btnClassName} onClick={toggleMenu}>
+          <RxHamburgerMenu className='profile-hamburger'/>
+          <FaUserCircle className='profile-image'/>
+        </button>
+      </div>
       <ul className={ulClassName} ref={ulRef}>
         {user ? (
           <>

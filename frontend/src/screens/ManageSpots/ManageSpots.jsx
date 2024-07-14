@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import spotsReducer, { getUserSpotsThunk } from '../../store/spots';
+import { getUserSpotsThunk, deleteSpotThunk } from '../../store/spots';
 import SpotTile from '../../components/Spots';
 import './ManageSpots.css';
 import { useNavigate } from 'react-router-dom';
@@ -35,6 +35,13 @@ const ManageSpot = () => {
     navigate('/spots/new');
   }
 
+  const handleDelete = async (e, spot) => {
+    e.preventDefault();
+    e.stopPropagation();
+    await dispatch(deleteSpotThunk(spot));
+    await dispatch(getUserSpotsThunk(sessionUser.id));
+  }
+
   if (!isLoaded) {
     return <h1>Loading...</h1>
   }
@@ -50,7 +57,7 @@ const ManageSpot = () => {
             <SpotTile spot={spot}/>
             <div className="update-delete-btns">
               <button onSubmit={() => null} className="update-spot">Update</button>
-              <button onSubmit={() => null} className="delete-spot">Delete</button>
+              <button onClick={(e) => handleDelete(e, spot)} className="delete-spot">Delete</button>
             </div>
           </div>
         ))}

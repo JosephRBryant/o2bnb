@@ -7,7 +7,7 @@ margin-bottom: 3rem;
   justify-content: center;
   align-items: center;
   height: 2rem;
-  width: 13rem;
+  width: 14.875rem;
   margin-bottom: 2rem;
   border-radius: .5rem;
   border: none;
@@ -19,6 +19,10 @@ margin-bottom: 3rem;
   font-weight: bold;
   letter-spacing: .05rem;
   cursor: pointer;
+}
+
+.create-new-spot:hover {
+  background-color: #1883dc;
 }
 
 .manage-spots {
@@ -48,8 +52,18 @@ margin-bottom: 3rem;
   color: #fff;
 }
 
+.update-spot:hover {
+  background-color: #1883dc;
+}
+
 .delete-spot {
   background-color: #fff;
   color: #2196F3;
   border: 2px solid #2196F3;
+}
+
+.delete-spot:hover {
+  background-color: #eff8ff;
+  color: #1883dc;
+  border: 2px solid #1883dc;
 }

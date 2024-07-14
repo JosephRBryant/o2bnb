@@ -38,36 +38,47 @@ function CreateSpot() {
     setErrors({});
 
     try {
-      if (!spotForm.previewImage) {
+      if (!spotForm.previewImage || spotForm.previewImage === '') {
         setPrevImgErr('Preview image is required');
-      } else if (!endsWithImage(spotForm.previewImage)) {
+        delete spotForm.previewImage;
+      } else if (endsWithImage(spotForm.previewImage) === false) {
         setPrevImgErr('Image URL must end in .png, .jpg, or .jpeg');
         delete spotForm.previewImage;
       }
 
-      if (spotForm.imgAErr && endsWithImage(spotForm.imageA) === false) {
+      if (spotForm.imageA && !endsWithImage(spotForm.imageA)) {
         setImgAErr('Image URL must end in .png, .jpg, or .jpeg');
+        delete spotForm.imageA;
+      } else if (!spotForm.imageA) {
         delete spotForm.imageA;
       }
 
-      if (spotForm.imgBErr && endsWithImage(spotForm.imageB) === false) {
+      if (spotForm.imageB && !endsWithImage(spotForm.imageB)) {
         setImgBErr('Image URL must end in .png, .jpg, or .jpeg');
+        delete spotForm.imageB;
+      } else if (!spotForm.imageB) {
         delete spotForm.imageB;
       }
 
-      if (spotForm.imgCErr && endsWithImage(spotForm.imageC) === false) {
+      if (spotForm.imageC && !endsWithImage(spotForm.imageC)) {
         setImgCErr('Image URL must end in .png, .jpg, or .jpeg');
+        delete spotForm.imageC;
+      } else if (!spotForm.imageC) {
         delete spotForm.imageC;
       }
 
-      if (spotForm.imgDErr && endsWithImage(spotForm.imageD) === false) {
+      if (spotForm.imageD && !endsWithImage(spotForm.imageD)) {
         setImgDErr('Image URL must end in .png, .jpg, or .jpeg');
+        delete spotForm.imageD;
+      } else if (!spotForm.imageD) {
         delete spotForm.imageD;
       }
 
       spotForm.lat = Number(spotForm.lat);
       spotForm.lng = Number(spotForm.lng);
       spotForm.price = Number(spotForm.price);
+
+      console.log('spotform', spotForm);
 
       const res = await dispatch(createSpotThunk(spotForm));
 
@@ -201,7 +212,7 @@ function CreateSpot() {
           <p className='sub-header'>Submit a link to at least one photo to publish your spot</p>
           <div className="image-url-errors">
             <input type="text" name="previewImage" id="previewImage" onChange={(e) => updateSpotForm(e, 'previewImage')} value={spotForm.previewImage} placeholder="Preview Image URL"/>
-            <p>{!prevImgErr && errors.url ? errors.url : null}</p>
+            <p>{!prevImgErr && errors.url ? errors.url : prevImgErr}</p>
           </div>
           <div className="image-url-errors">
             <input type="text" name="imageA" id="imageA" onChange={(e) => updateSpotForm(e, 'imageA')} value={spotForm.imageA} placeholder="Image URL" />
