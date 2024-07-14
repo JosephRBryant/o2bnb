@@ -12,6 +12,7 @@ const SpotDetails = () => {
   const { spotId } = useParams();
   const [isLoaded, setIsLoaded] = useState(false);
   const [spot, setSpot] = useState({});
+  const placeholder = 'https://placehold.co/500x500/2196F3/fff/?font=raleway&text=image';
 
   let previewImage;
   let spotImages;
@@ -50,17 +51,17 @@ const SpotDetails = () => {
 
   return (
     <main className="spot-detail-main">
-      <header>
+      <header className="spot-detail-header">
         <h1>{spotDetails.name}</h1>
         <p>{`${spotDetails.city}, ${spotDetails.state}, ${spotDetails.country}`}</p>
       </header>
       <div className="spot-detail-container">
         <div className="image-container">
           <div className="prev-img" style={{backgroundImage: `url(${previewImage.url})`}}></div>
-          <div className="thumb-img img-a" style={{backgroundImage: `url(${spotImages[1].url})`}}></div>
-          <div className="thumb-img img-b" style={{backgroundImage: `url(${spotImages[2].url})`}}></div>
-          <div className="thumb-img img-c" style={{backgroundImage: `url(${spotImages[3].url})`}}></div>
-          <div className="thumb-img img-d" style={{backgroundImage: `url(${spotImages[4].url})`}}></div>
+          <div className="thumb-img img-a" style={{backgroundImage: `url(${spotImages[1] && spotImages[1].url ? spotImages[1].url : placeholder})`}}></div>
+          <div className="thumb-img img-b" style={{backgroundImage: `url(${spotImages[2] && spotImages[2].url ? spotImages[2].url : placeholder})`}}></div>
+          <div className="thumb-img img-c" style={{backgroundImage: `url(${spotImages[3] && spotImages[3].url ? spotImages[3].url : placeholder})`}}></div>
+          <div className="thumb-img img-d" style={{backgroundImage: `url(${spotImages[4] && spotImages[4].url ? spotImages[4].url : placeholder})`}}></div>
         </div>
         <div className="spot-info-container">
           <div className="spot-description">

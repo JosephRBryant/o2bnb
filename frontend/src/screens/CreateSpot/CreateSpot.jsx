@@ -10,6 +10,11 @@ function CreateSpot() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [errors, setErrors] = useState({});
   const spots = useSelector(state => state.spotState.allSpots)
+  const [prevImgErr, setPrevImgErr] = useState('');
+  const [imgAErr, setImgAErr] = useState('');
+  const [imgBErr, setImgBErr] = useState('');
+  const [imgCErr, setImgCErr] = useState('');
+  const [imgDErr, setImgDErr] = useState('');
 
   const [spotForm, setSpotForm] = useState({
     address: '',
@@ -33,32 +38,53 @@ function CreateSpot() {
     setErrors({});
 
     try {
+      if (!spotForm.previewImage) {
+        setPrevImgErr('Preview image is required');
+      } else if (!endsWithImage(spotForm.previewImage)) {
+        setPrevImgErr('Image URL must end in .png, .jpg, or .jpeg');
+        delete spotForm.previewImage;
+      }
+
+      if (spotForm.imgAErr && endsWithImage(spotForm.imageA) === false) {
+        setImgAErr('Image URL must end in .png, .jpg, or .jpeg');
+        delete spotForm.imageA;
+      }
+
+      if (spotForm.imgBErr && endsWithImage(spotForm.imageB) === false) {
+        setImgBErr('Image URL must end in .png, .jpg, or .jpeg');
+        delete spotForm.imageB;
+      }
+
+      if (spotForm.imgCErr && endsWithImage(spotForm.imageC) === false) {
+        setImgCErr('Image URL must end in .png, .jpg, or .jpeg');
+        delete spotForm.imageC;
+      }
+
+      if (spotForm.imgDErr && endsWithImage(spotForm.imageD) === false) {
+        setImgDErr('Image URL must end in .png, .jpg, or .jpeg');
+        delete spotForm.imageD;
+      }
+
       spotForm.lat = Number(spotForm.lat);
       spotForm.lng = Number(spotForm.lng);
       spotForm.price = Number(spotForm.price);
 
       const res = await dispatch(createSpotThunk(spotForm));
+
       if (!res.id) {
         const err = await res.json();
-        console.log('res not ok in thunk', err);
         const backendErrors = {};
         backendErrors.message = err.message;
-
         setErrors(err.errors);
-        console.log('console log spts after create dispatch', err.errors.state);
+      } else {
+        console.log('res', res);
+        navigate(`/spots/${res.id}`)
       }
     } catch (error) {
       return error;
     }
 
   }
-
-  // function findCurrentSpot(spots) {
-  //   let spot = spots.filter(spot => spot.address === spotForm.address)
-  //   spot = spot[0];
-  //   console.log('find cur spot func', spot, spot.id);
-  //   return spot;
-  // }
 
   function updateSpotForm(e, label) {
     setSpotForm(prev => {
@@ -68,12 +94,34 @@ function CreateSpot() {
     })
   }
 
+  function endsWithImage(value) {
+    if (
+      !value.endsWith('.png') &&
+      !value.endsWith('.jpg') &&
+      !value.endsWith('.jpeg')
+    ) {
+      return false
+    } else {
+      return true
+    }
+  }
+
+  // function validateImage(label) {
+  //   if (label === 'previewImage' && !spotForm.previewImage.length) {
+  //     return 'Preview image is required';
+  //   }
+  //   if (!spotForm[label].endsWith('.png') && !spotForm[label].endsWith('.jpg') && !spotForm[label].endsWith('.jpeg')) {
+  //     return 'Image URL must end in .png, .jpg, or .jpeg';
+  //   }
+  //   return;
+  // }
+
   return (
     <main className="create-spot-main">
       <header className='create-spot-header'>
         <h1>Create a New Spot</h1>
         <h2>Where&apos;s your place located?</h2>
-        <p>Guests will only get your exact address once they&apos;ve booked a reservation.</p>
+        <p className='sub-header'>Guests will only get your exact address once they&apos;ve booked a reservation.</p>
       </header>
       <form className="form-create-spot" onSubmit={onSubmit}>
         <div className="label-error">
@@ -93,8 +141,8 @@ function CreateSpot() {
               <p>{errors.city}</p>
             </div>
             <input type="text" name="city" id="city" onChange={(e) => updateSpotForm(e, 'city')} value={spotForm.city} placeholder="City" />
-            <span className='form-comma'>,</span>
           </div>
+            <span className='form-comma'>,</span>
           <div className="form-state">
             <div className="label-error">
               <label htmlFor="state">State</label>
@@ -110,8 +158,8 @@ function CreateSpot() {
               <p>{errors.lat}</p>
             </div>
             <input type="text" name="lat" id="lat" onChange={(e) => updateSpotForm(e, 'lat')} value={spotForm.lat} placeholder="Latitude" />
-          <span className="form-comma">,</span>
           </div>
+            <span className="form-comma">,</span>
           <div className="form-lng">
             <div className="label-error">
               <label htmlFor="lng">Longitude</label>
@@ -121,18 +169,27 @@ function CreateSpot() {
           </div>
         </div>
         <div className="form-description">
-          <h2>Describe your place to guests</h2>
-          <p>Mention the best features of your space, only special amenities like fast wifi or parking, and what you love about the neighborhood.</p>
+          <div className="label-error">
+            <h2>Describe your place to guests</h2>
+            <p>{errors.description}</p>
+          </div>
+          <p className='sub-header'>Mention the best features of your space, only special amenities like fast wifi or parking, and what you love about the neighborhood.</p>
           <textarea name="description" id="description" onChange={(e) => updateSpotForm(e, 'description')} value={spotForm.description} placeholder="Description"></textarea>
         </div>
         <div className="form-title">
-          <h2>Create a title for your spot</h2>
-          <p>Catch a guest&apos;s attention with a spot title that highlights what makes your place special.</p>
+          <div className="label-error">
+            <h2>Create a title for your spot</h2>
+            <p>{errors.name}</p>
+          </div>
+          <p className='sub-header'>Catch a guest&apos;s attention with a spot title that highlights what makes your place special.</p>
           <input type="text" name="name" id="name" onChange={(e) => updateSpotForm(e, 'name')} value={spotForm.name} placeholder="Name of your spot" />
         </div>
         <div className="form-price">
-          <h2>Set a base price for your spot</h2>
-          <p>Competitive pricing can help your listing stand out and rank higher
+          <div className="label-error">
+            <h2>Set a base price for your spot</h2>
+            <p>{errors.price}</p>
+          </div>
+          <p className='sub-header'>Competitive pricing can help your listing stand out and rank higher
           in search results</p>
           <div className="form-price-input">
             $
@@ -141,37 +198,35 @@ function CreateSpot() {
         </div>
         <div className="form-photos">
           <h2>Liven up your spot with photos</h2>
-          <p>Submit a link to at least one photo to publish your spot</p>
-          <input type="text" name="previewImage" id="previewImage" onChange={(e) => updateSpotForm(e, 'previewImage')} value={spotForm.previewImage} placeholder="Preview Image URL" required/>
-          <input type="text" name="imageA" id="imageA" onChange={(e) => updateSpotForm(e, 'imageA')} value={spotForm.imageA} placeholder="Image URL" />
-          <input type="text" name="imageB" id="imageB" onChange={(e) => updateSpotForm(e, 'imageB')} value={spotForm.imageB} placeholder="Image URL" />
-          <input type="text" name="imageC" id="imageC" onChange={(e) => updateSpotForm(e, 'imageC')} value={spotForm.imageC} placeholder="Image URL" />
-          <input type="text" name="imageD" id="imageD" onChange={(e) => updateSpotForm(e, 'imageD')} value={spotForm.imageD} placeholder="Image URL" />
+          <p className='sub-header'>Submit a link to at least one photo to publish your spot</p>
+          <div className="image-url-errors">
+            <input type="text" name="previewImage" id="previewImage" onChange={(e) => updateSpotForm(e, 'previewImage')} value={spotForm.previewImage} placeholder="Preview Image URL"/>
+            <p>{!prevImgErr && errors.url ? errors.url : null}</p>
+          </div>
+          <div className="image-url-errors">
+            <input type="text" name="imageA" id="imageA" onChange={(e) => updateSpotForm(e, 'imageA')} value={spotForm.imageA} placeholder="Image URL" />
+            <p>{imgAErr}</p>
+          </div>
+          <div className="image-url-errors">
+            <input type="text" name="imageB" id="imageB" onChange={(e) => updateSpotForm(e, 'imageB')} value={spotForm.imageB} placeholder="Image URL" />
+            <p>{imgBErr}</p>
+          </div>
+          <div className="image-url-errors">
+            <input type="text" name="imageC" id="imageC" onChange={(e) => updateSpotForm(e, 'imageC')} value={spotForm.imageC} placeholder="Image URL" />
+            <p>{imgCErr}</p>
+          </div>
+          <div className="image-url-errors">
+            <input type="text" name="imageD" id="imageD" onChange={(e) => updateSpotForm(e, 'imageD')} value={spotForm.imageD} placeholder="Image URL" />
+            <p>{imgDErr}</p>
+          </div>
+
         </div>
-        <button type="submit">Create a Spot</button>
+        <div className="form-button">
+          <button type="submit">Create Spot</button>
+        </div>
       </form>
     </main>
   )
 }
 
 export default CreateSpot;
-
-// const findCurrentSpot = (spots) => {
-//  let spot = spots.filter(spot => spot.address === address)
-//  spot = spot[0];
-//  console.log('find cur spot func', spot, spot.id);
-//  return spot;
-// }
-
-
-// for ( let image of imageForm) {
-//   const imageObj = {};
-//   if (image === imageForm[0]) {
-//     imageObj.spotId = findCurrentSpot(spots).id;
-//     imageObj.url = image;
-//     imageObj.preview = true;
-//   } else {
-//     imageObj.spotId = findCurrentSpot(spots).id;
-//     imageObj.url = image;
-//     imageObj.preview = false;
-//   }

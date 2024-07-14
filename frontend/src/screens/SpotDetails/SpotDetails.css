@@ -11,6 +11,10 @@ header {
   align-items: center;
 }
 
+.spot-detail-header {
+  margin-bottom: 1.5rem;
+}
+
 .spot-detail-container {
   display: flex;
   flex-direction: column;
