@@ -24,7 +24,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     url: {
       type: DataTypes.STRING,
-      unique: true
+      unique: {
+        arg: true,
+        msg: 'Image already in use'
+      }
     },
     preview: {
       type: DataTypes.BOOLEAN,
