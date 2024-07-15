@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { getUserSpotsThunk, deleteSpotThunk } from '../../store/spots';
-import SpotTile from '../../components/Spots';
-import './ManageSpots.css';
 import { useNavigate } from 'react-router-dom';
 import { restoreUser } from '../../store/session';
+import { getUserSpotsThunk, deleteSpotThunk } from '../../store/spots';
+import SpotTile from '../../components/Spots';
+import OpenModalButton from './OpenModalButton';
+import DeleteFormModal from '../../components/DeleteFormModal/DeleteFormModal';
+import './ManageSpots.css';
 
 const ManageSpot = () => {
   const dispatch = useDispatch();
@@ -57,7 +59,12 @@ const ManageSpot = () => {
             <SpotTile spot={spot}/>
             <div className="update-delete-btns">
               <button onSubmit={() => null} className="update-spot">Update</button>
-              <button onClick={(e) => handleDelete(e, spot)} className="delete-spot">Delete</button>
+              <OpenModalButton
+              className='open-modal'
+              itemText= 'Delete'
+              modalComponent={<DeleteFormModal spot={spot}/>}
+               />
+              {/* <button onClick={(e) => handleDelete(e, spot)} className="delete-spot">Delete</button> */}
             </div>
           </div>
         ))}

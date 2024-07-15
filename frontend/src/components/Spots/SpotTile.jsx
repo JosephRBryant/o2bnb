@@ -6,12 +6,6 @@ const SpotTile = (spot) => {
   const navigate = useNavigate();
   spot = spot.spot
 
-  // handle seed data
-  if (spot.previewImage.includes('../../../frontend/dist/assets/spotImages')) {
-    spot.previewImage = spot.previewImage.replace('/frontend', '')
-  }
-
-  // handle goToSpotDetails
   const goToSpotDetail = (e) => {
     e.preventDefault();
     navigate(`/spots/${spot.id}`);

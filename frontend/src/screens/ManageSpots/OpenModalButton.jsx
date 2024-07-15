@@ -1,9 +1,8 @@
 import React from "react";
-import { useModal } from "../../context/Modal";
-import './ProfileButton.css'
-import '../../screens/ManageSpots/ManageSpots.css'
+import { useModal } from '../../context/Modal';
+import './ManageSpots.css';
 
-function OpenModalMenuItem({
+function OpenModalButton({
   modalComponent,
   itemText,
   onItemClick,
@@ -18,8 +17,8 @@ function OpenModalMenuItem({
   };
 
   return (
-    <li onClick={onClick}>{itemText}</li>
+    <button className='modal-btn' onClick={onClick}>{itemText}</button>
   );
 }
 
-export default OpenModalMenuItem;
+export default OpenModalButton;

@@ -11,7 +11,7 @@ const Splash = () => {
 
   useEffect(() => {
     const getData = async () => {
-      dispatch(getAllSpotsThunk());
+      await dispatch(getAllSpotsThunk());
       setIsLoaded(true)
     }
     if (!isLoaded && !spots.length) {

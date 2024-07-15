@@ -16,8 +16,6 @@ function LoginFormModal() {
   const [loginError, setLoginError] = useState('');
   const { closeModal } = useModal();
 
-  console.log('sess', sessionUser);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
@@ -28,7 +26,6 @@ function LoginFormModal() {
     } catch (res) {
       const data = await res.json();
       if (data?.message) {
-        console.log('is errorring')
         setErrors(data.message);
         setLoginError(data.message);
       }
@@ -56,7 +53,7 @@ function LoginFormModal() {
 
   return (
     <div className="login-form">
-      <h1 className="login-header">Log In</h1>
+      <h1 className="login-header">Log in as Demo User</h1>
       <div className="credentials-error-container">
         <h2 className="credentials-error">{loginError}</h2>
       </div>

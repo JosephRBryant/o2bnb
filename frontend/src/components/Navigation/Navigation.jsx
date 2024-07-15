@@ -1,10 +1,21 @@
-import { NavLink } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { NavLink, useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import ProfileButton from './ProfileButton';
 import './Navigation.css';
+import { useEffect } from 'react';
+import { getAllSpotsThunk } from '../../store/spots';
 
 function Navigation({ isLoaded }){
+  const dispatch = useDispatch();
   const sessionUser = useSelector(state => state.session.user);
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname === '/') {
+      dispatch(getAllSpotsThunk())
+    }
+  }, [dispatch, location]);
+
   return (
     <nav className='nav-bar'>
       <ul className='nav-list'>
