@@ -507,7 +507,7 @@ router.post('/:spotId/images', handleValidationErrors, requireAuth, async (req, 
 });
 
 // Edit spot by spotId
-router.put('/:spotId', requireAuth, handleValidationErrors, async (req, res) => {
+router.put('/:spotId', requireAuth, handleValidationErrors, async (req, res, next) => {
   try {
     let { user } = req;
     const { address, city, state, country, lat, lng, name, description, price } = req.body;
@@ -555,9 +555,10 @@ router.put('/:spotId', requireAuth, handleValidationErrors, async (req, res) => 
     } else {
       return res.status(403).json({message: "Forbidden"})
     }
-  } catch (error) {
-    console.error("Error deleting spot by spotId:", error);
-    return res.status(400).json({message: 'Bad Request'})
+  } catch(error) {
+    error.message = "Bad Request";
+    error.status = 400;
+    next(error)
   }
 })
 

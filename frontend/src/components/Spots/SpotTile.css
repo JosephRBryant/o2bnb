@@ -1,5 +1,5 @@
 .tile-container {
-  height: 300px;
+  height: auto;
   width: auto;
   cursor: pointer;
 }
@@ -8,7 +8,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 238px;
+  min-height: 238px;
+  aspect-ratio: 1 / 1;
   border-radius: 10px;
   background-size: cover;
   background-position: center;
@@ -52,6 +53,7 @@
   padding: 0 .2rem;
   justify-content: space-between;
   font-family: 'Robot', sans-serif;
+  font-size: .9rem;
   color: #222;
 }
 

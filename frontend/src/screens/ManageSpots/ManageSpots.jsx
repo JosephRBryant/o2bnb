@@ -49,7 +49,7 @@ const ManageSpot = () => {
   }
   return (
     <main className='manage-spots-main'>
-      <header>
+      <header className='manage-spots-header'>
         <h1>Manage your Spots</h1>
         <Link className="create-new-spot" onClick={goToCreateSpot}>Create a New Spot</Link>
       </header>
