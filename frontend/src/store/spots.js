@@ -5,6 +5,7 @@ const GET_SPOT_DETAILS = 'spots/getSpotDetails';
 const GET_USER_SPOTS = 'spots/getUserSpots';
 const CREATE_SPOT = 'spots/createSpot';
 const DELETE_SPOT = 'spots/deleteSpot';
+const UPDATE_SPOT = 'spots/updateSpot';
 
 const getAllSpots = (spots) => {
   return {
@@ -38,6 +39,13 @@ const deleteSpot = (deletedSpot) => {
   return {
     type: DELETE_SPOT,
     payload: deletedSpot
+  }
+}
+
+const updateSpot = (updatedSpot) => {
+  return {
+    type: UPDATE_SPOT,
+    payload: updatedSpot
   }
 }
 
@@ -158,6 +166,55 @@ export const deleteSpotThunk = (spot) => async (dispatch) => {
   }
 }
 
+export const updateSpotThunk = (spotForm, spotId) => async (dispatch) => {
+  try {
+    const {address, city, state, country, lat, lng, name, description, price} = spotForm;
+    console.log('spotform in thunk', address);
+    const spotData = {
+      address,
+      city,
+      state,
+      country,
+      lat,
+      lng,
+      name,
+      description,
+      price,
+      // previewImage,
+      // imageA,
+      // imageB,
+      // imageC,
+      // imageD
+    }
+
+    // for (let data in spotData) {
+    //   if (spotData[data] === undefined || spotData[data] === '') {
+    //     console.log('data missing or undefined', data);
+    //     delete spotData[data]
+    //   }
+    // }
+    console.log('spotData in thunk after delete', typeof spotData);
+    const options = {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(spotData)
+    }
+
+    let res = {}
+    res = await csrfFetch(`/api/spots/${spotId}`, options);
+
+    if (res.ok) {
+      const data = await res.json();
+      await dispatch(updateSpot(data));
+      return data;
+    } else {
+      throw res;
+    }
+  } catch (error) {
+    return error;
+  }
+}
+
 const initialState = {
   allSpots: [],
   byId: {},
@@ -170,7 +227,7 @@ const spotsReducer = (state = initialState, action) => {
   switch(action.type) {
     case GET_ALL_SPOTS:
       newState = {...state};
-      newState.allSpots = action.payload.Spots
+      newState.allSpots = action.payload.Spots.reverse();
 
       for (let spot of action.payload.Spots) {
         newState.byId[spot.id] = spot
@@ -188,7 +245,7 @@ const spotsReducer = (state = initialState, action) => {
       return newState;
     case GET_USER_SPOTS:
       newState = {...state};
-      newState.userSpots = action.payload.Spots;
+      newState.userSpots = action.payload.Spots.reverse();
       for (let spot of action.payload.Spots) {
         newState.byId[spot.id] = spot
       }
@@ -198,6 +255,25 @@ const spotsReducer = (state = initialState, action) => {
       newState.allSpots = [action.payload, ...newState.allSpots];
       newState.byId = {...newState.byId, [action.payload.id]: action.payload};
       return newState;
+    case UPDATE_SPOT: {
+      newState = {...state};
+      const spotId = action.payload.id;
+
+      const newAllSpots = [];
+
+      for (let i = 0; i < newState.allSpots.length; i++) {
+        let currSpot = newState.allSpots[i];
+        if (currSpot.id === spotId) {
+          newAllSpots.push(action.payload)
+        } else {
+          newAllSpots.push(currSpot)
+        }
+      }
+
+      newState.allSpots = newAllSpots;
+      newState.byId = {...newState.byId, [spotId]: action.payload};
+      return newState;
+    }
     default:
       return state;
   }

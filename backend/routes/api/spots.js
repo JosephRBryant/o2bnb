@@ -507,17 +507,16 @@ router.post('/:spotId/images', handleValidationErrors, requireAuth, async (req, 
 });
 
 // Edit spot by spotId
-router.put('/:spotId', requireAuth, handleValidationErrors, async (req, res) => {
+router.put('/:spotId', requireAuth, handleValidationErrors, async (req, res, next) => {
   try {
     let { user } = req;
     const { address, city, state, country, lat, lng, name, description, price } = req.body;
     let spotId = req.params.spotId;
     spotId = Number(spotId);
-
     // does spot exist
     let spotExists = await Spot.findByPk(spotId);
     if (!spotExists) {
-      res.status(404).json({message: "Spot couldn't be found"})
+      return res.status(404).json({message: "Spot couldn't be found"})
     }
 
     // find user spots
@@ -552,15 +551,14 @@ router.put('/:spotId', requireAuth, handleValidationErrors, async (req, res) => 
       updatedSpot = updatedSpot.toJSON();
       updatedSpot.createdAt = formatDateTime(updatedSpot.createdAt);
       updatedSpot.updatedAt = formatDateTime(updatedSpot.updatedAt);
-      res.json(updatedSpot);
+      return res.json(updatedSpot);
     } else {
-      res.status(403).json({message: "Forbidden"})
+      return res.status(403).json({message: "Forbidden"})
     }
-  } catch (error) {
+  } catch(error) {
+    error.message = "Bad Request";
     error.status = 400;
-    error.message = "Bad Request"
-    console.error("Error deleting spot by spotId:", error);
-    throw error;
+    next(error)
   }
 })
 

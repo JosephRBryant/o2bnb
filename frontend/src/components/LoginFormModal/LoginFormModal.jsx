@@ -74,7 +74,7 @@ function LoginFormModal() {
         />
         {errors.credential && <p>{errors.credential}</p>}
         <button className='login-submit' type="submit" disabled={isSubmitDisabled}>Log In</button>
-        <a onClick={demoUser} className='demo-user'>Demo User</a>
+        <a onClick={demoUser} className='demo-user'>Log in as Demo User</a>
       </form>
     </div>
   );

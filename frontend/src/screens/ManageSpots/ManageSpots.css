@@ -40,16 +40,26 @@ margin-bottom: 3rem;
 
 .update-spot,
 .modal-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: .25rem 1.5rem;
   border-radius: .5rem;
   cursor: pointer;
+  font-family: 'Roboto', sans-serif;
+  font-size: .85rem;
 }
 
 .update-spot {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin-right: 1rem;
   border: none;
   background-color: #2196F3;
   color: #fff;
+  text-decoration: none;
+
 }
 
 .update-spot:hover {
@@ -60,6 +70,7 @@ margin-bottom: 3rem;
   background-color: #fff;
   color: #2196F3;
   border: 2px solid #2196F3;
+
 }
 
 .modal-btn:hover {
