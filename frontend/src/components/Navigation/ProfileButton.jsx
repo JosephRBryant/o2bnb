@@ -62,7 +62,7 @@ function ProfileButton({ user }) {
   return (
     <>
       <div className="profile-create-btns">
-        <button className={createBtnClassName} onClick={goToCreateSpot}>Create a Spot</button>
+        <a className={createBtnClassName} onClick={goToCreateSpot}>Create a Spot</a>
         <button className={btnClassName} onClick={toggleMenu}>
           <RxHamburgerMenu className='profile-hamburger'/>
           <FaUserCircle className='profile-image'/>
@@ -71,8 +71,8 @@ function ProfileButton({ user }) {
       <ul className={ulClassName} ref={ulRef}>
         {user ? (
           <>
-            <li>Hello, {user.firstName}</li>
-            <li>{user.email}</li>
+            <li className='user-greeting'>Hello, {user.firstName}</li>
+            <li className='user-email'>{user.email}</li>
             <li>
               <Link onClick={goToManageSpots} className='link-no-styling'>Manage Spots</Link>
             </li>

@@ -58,13 +58,17 @@ const ManageSpot = () => {
           <div key={`${idx}-${spot.name}`} className="spot-tile" data-tooltip={spot.name}>
             <SpotTile spot={spot}/>
             <div className="update-delete-btns">
-              <button onSubmit={() => null} className="update-spot">Update</button>
+              <Link onClick={
+                (e) => {
+                  e.preventDefault();
+                  navigate(`/spots/${spot.id}/update`);
+                }
+              } className="update-spot" spot={spot}>Update</Link>
               <OpenModalButton
               className='open-modal'
               itemText= 'Delete'
               modalComponent={<DeleteFormModal spot={spot}/>}
                />
-              {/* <button onClick={(e) => handleDelete(e, spot)} className="delete-spot">Delete</button> */}
             </div>
           </div>
         ))}

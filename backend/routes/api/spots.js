@@ -513,11 +513,10 @@ router.put('/:spotId', requireAuth, handleValidationErrors, async (req, res) => 
     const { address, city, state, country, lat, lng, name, description, price } = req.body;
     let spotId = req.params.spotId;
     spotId = Number(spotId);
-
     // does spot exist
     let spotExists = await Spot.findByPk(spotId);
     if (!spotExists) {
-      res.status(404).json({message: "Spot couldn't be found"})
+      return res.status(404).json({message: "Spot couldn't be found"})
     }
 
     // find user spots
@@ -552,15 +551,13 @@ router.put('/:spotId', requireAuth, handleValidationErrors, async (req, res) => 
       updatedSpot = updatedSpot.toJSON();
       updatedSpot.createdAt = formatDateTime(updatedSpot.createdAt);
       updatedSpot.updatedAt = formatDateTime(updatedSpot.updatedAt);
-      res.json(updatedSpot);
+      return res.json(updatedSpot);
     } else {
-      res.status(403).json({message: "Forbidden"})
+      return res.status(403).json({message: "Forbidden"})
     }
   } catch (error) {
-    error.status = 400;
-    error.message = "Bad Request"
     console.error("Error deleting spot by spotId:", error);
-    throw error;
+    return res.status(400).json({message: 'Bad Request'})
   }
 })
 

@@ -8,6 +8,7 @@ import { getAllSpotsThunk } from "./store/spots";
 import * as sessionActions from './store/session';
 import ManageSpot from "./screens/ManageSpots/ManageSpots";
 import CreateSpot from "./screens/CreateSpot/CreateSpot";
+import UpdateSpot from "./screens/UpdateSpot/UpdateSpot";
 
 function Layout() {
   const dispatch = useDispatch();
@@ -62,6 +63,10 @@ function App() {
         {
           path: '/spots/new',
           element: <CreateSpot />
+        },
+        {
+          path: '/spots/:spotId/update',
+          element: <UpdateSpot />
         }
       ]
     }

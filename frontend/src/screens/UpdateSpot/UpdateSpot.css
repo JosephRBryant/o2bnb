@@ -1,0 +1,127 @@
+.update-spot-main {
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+}
+
+.update-spot-header {
+  max-width: 600px;
+  margin-bottom: 1.5rem;
+}
+
+.form-update-spot {
+  font-family: 'Roboto', sans-serif;
+}
+
+.form-update-spot input {
+  width: calc(100% - 1.2rem);
+}
+
+.label-error {
+  display: flex;
+  align-items: center;
+}
+
+.label-error p {
+  color: red;
+  position: relative;
+  margin-left: 1rem;
+}
+
+#description {
+  width: calc(100% - 2rem);
+  height: 10rem;
+  padding: .5rem;
+  background-color: #E7F0FE;
+  border: 2px solid #222;
+  border-radius: .25rem;
+  font-size: 1rem;
+  font-family: 'Roboto', sans-serif;
+}
+
+.form-comma {
+  margin: 0 .75rem 0 .25rem;
+  position: relative;
+  top: 3rem;
+}
+.form-city-state,
+.form-lat-lng {
+  display: flex;
+  justify-content: space-between;
+}
+
+.form-city {
+  width: 60%;
+}
+
+.form-state {
+  width: 40%;
+}
+
+.form-lat,
+.form-lng {
+  width: 100%;
+}
+
+.form-lat-lng,
+.form-description,
+.form-title,
+.form-price,
+.form-photos {
+  padding: 0 0 1.5rem 0;
+  box-shadow: rgb(0 0 0 / 8%) 0 1px 0;
+
+}
+
+.form-price-input {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+}
+
+.form-city .label-error,
+.form-state .label-error,
+.form-lat .label-error,
+.form-lng .label-error {
+  margin-bottom: 0.5rem;
+}
+
+.form-description .sub-header,
+.form-title .sub-header,
+.form-price .sub-header,
+.form-photos .sub-header {
+margin-bottom: 1.5rem;
+}
+/*
+.form-photos input {
+
+} */
+
+.image-url-errors {
+  height: 4.5rem;
+}
+
+.form-photos p:not(.sub-header) {
+  margin-top: .5rem;
+  color: red;
+}
+
+.form-button {
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0;
+}
+
+.form-button button {
+  height: 2rem;
+  width: 10rem;
+  border: none;
+  border-radius: .5rem;
+  background-color: #2196F3;
+  color: #fff;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1rem;
+  font-weight: bold;
+  letter-spacing: .05rem;
+  cursor: pointer;
+}
