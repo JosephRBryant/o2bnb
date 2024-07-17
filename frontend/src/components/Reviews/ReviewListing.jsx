@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getSpotReviewsThunk } from '../../store/review';
 import { getSpotDetailsThunk } from '../../store/spots';
 import './ReviewListing.css';
 
 const ReviewListing = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   let { spotId } = useParams();
   const sessionUser = useSelector(state => state.session.user)
   const [isLoaded, setIsLoaded] = useState(false);
@@ -41,21 +42,41 @@ const ReviewListing = () => {
 
   reviews = reviews.Reviews
 
-  function isUserNoReviews(spot) {
-    if (sessionUser && sessionUser.id !== spot.ownerId && !reviews.length) {
-      console.log('sessuse', sessionUser);
+  function isUserSpot(spot) {
+    sessionUser && sessionUser.id !== spot.ownerId ? false : true
+  }
+
+  function hasNoReviews(spot) {
+    if (!isUserSpot(spot) && !reviews.length) {
       return true;
     }
     return false;
   }
 
+  function hasUserReview(spot) {
+    if (!isUserSpot(spot) && reviews.some(e => e.userId === sessionUser.id)) {
+      true
+    }
+    return false;
+  }
+
+  const goToPostReview = (e) => {
+    e.preventDefault();
+    navigate(`/${spotId}/reviews/new`);
+  }
+
+
   let reversedReviews = reviews.slice().reverse();
 
   return (
     <>
-      {isUserNoReviews(spot) ? (
-        <h2>Be the first to post a review!</h2>
-      ) : (
+      {hasNoReviews(spot) ? (
+        <div>
+          <button className='post-review-btn' onClick={goToPostReview}>Post Your Review</button>
+          <h2>Be the first to post a review!</h2>
+        </div>
+      ) :
+      hasUserReview(spot) ? (
       <ul className='reviews-list'>
         {reversedReviews.map((review, idx) => (
           <li className='review-list-items' key={`${idx}-${review.id}`}>
@@ -67,7 +88,22 @@ const ReviewListing = () => {
           </li>
         ))}
       </ul>
-      )}
+      ) :
+      <div>
+        <button className='post-review-btn' onClick={goToPostReview}>Post Your Review</button>
+        <ul className='reviews-list'>
+          {reversedReviews.map((review, idx) => (
+            <li className='review-list-items' key={`${idx}-${review.id}`}>
+              <h3 className='user-review-name'>{review.User.firstName}</h3>
+              <span>{`${getMonthName(review.createdAt)} ${review.createdAt.slice(0,4)}`}</span>
+              <p>
+              {review.review}
+              </p>
+            </li>
+          ))}
+        </ul>
+      </div>
+      }
     </>
   )
 }

@@ -53,7 +53,7 @@ function LoginFormModal() {
 
   return (
     <div className="login-form">
-      <h1 className="login-header">Log in as Demo User</h1>
+      <h1 className="login-header">Log in</h1>
       <div className="credentials-error-container">
         <h2 className="credentials-error">{loginError}</h2>
       </div>
