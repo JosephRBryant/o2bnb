@@ -35,31 +35,6 @@ function SignupFormModal() {
         setErrors(data.errors)
       }
     })
-
-    console.log('errors from data', errors);
-    // if (password === confirmPassword) {
-    //   setErrors({});
-    //   return dispatch(
-    //     sessionActions.signup({
-    //       email,
-    //       username,
-    //       firstName,
-    //       lastName,
-    //       password
-    //     })
-    //   )
-    //     .then(closeModal)
-    //     .catch(async (res) => {
-    //     const data = await res.json();
-    //     if (data?.errors) {
-    //       setErrors(data.errors);
-    //     }
-    //   });
-    // }
-    // console.log('errors in submit', errors);
-    // return setErrors({
-    //   confirmPassword: 'Confirm Password field must be the same as the Password field'
-    // });
   };
 
   return (

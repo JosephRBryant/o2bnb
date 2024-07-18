@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getSpotReviewsThunk } from '../../store/review';
 import { getSpotDetailsThunk } from '../../store/spots';
+import ReviewFormModal from '../ReviewFormModal/ReviewFormModal';
+import OpenModalButton from '../../screens/ManageSpots/OpenModalButton';
 import './ReviewListing.css';
 
 const ReviewListing = () => {
@@ -13,9 +15,8 @@ const ReviewListing = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [spot, setSpot] = useState({});
   const spotDetails = useSelector(state => state.spotState.spotDetails)
-  spotId = Number(spotId);
-
   let reviews = useSelector(state => state.reviewState.spotReviews)
+  spotId = Number(spotId);
 
   useEffect(() => {
     const getData = async() => {
@@ -28,7 +29,7 @@ const ReviewListing = () => {
       getData();
     }
   },[dispatch, isLoaded, reviews.length, spotDetails, spotId])
-  console.log('spot out of useffect', spot);
+
   if(!isLoaded) {
     return <h1>Loading...</h1>
   }
@@ -42,8 +43,13 @@ const ReviewListing = () => {
 
   reviews = reviews.Reviews
 
-  function isUserSpot(spot) {
-    sessionUser && sessionUser.id !== spot.ownerId ? false : true
+  function isUserSpot() {
+    if (sessionUser) {
+      if (sessionUser.id === spot.ownerId) {
+        return true
+      }
+    }
+    return false
   }
 
   function hasNoReviews(spot) {
@@ -54,29 +60,41 @@ const ReviewListing = () => {
   }
 
   function hasUserReview(spot) {
-    if (!isUserSpot(spot) && reviews.some(e => e.userId === sessionUser.id)) {
-      true
+    if (!isUserSpot(spot) && !reviews.some(e => e.userId === sessionUser.id)) {
+      return true;
     }
     return false;
   }
-
-  const goToPostReview = (e) => {
-    e.preventDefault();
-    navigate(`/${spotId}/reviews/new`);
-  }
-
 
   let reversedReviews = reviews.slice().reverse();
 
   return (
     <>
-      {hasNoReviews(spot) ? (
+      {!sessionUser || isUserSpot(spot) ? (
+        <ul className='reviews-list'>
+        {reversedReviews.map((review, idx) => (
+          <li className='review-list-items' key={`${idx}-${review.id}`}>
+            <h3 className='user-review-name'>{review.User.firstName}</h3>
+            <span>{`${getMonthName(review.createdAt)} ${review.createdAt.slice(0,4)}`}</span>
+            <p>
+            {review.review}
+            </p>
+          </li>
+        ))}
+      </ul>
+      ) :
+      hasNoReviews(spot) ? (
         <div>
-          <button className='post-review-btn' onClick={goToPostReview}>Post Your Review</button>
+          <OpenModalButton
+          className='open-modal'
+          itemText='Post Your Review'
+          modalComponent={<ReviewFormModal spotId={spotId}/>}
+          />
+          {/* <button className='modal-btn' onClick={goToPostReview}>Post Your Review</button> */}
           <h2>Be the first to post a review!</h2>
         </div>
       ) :
-      hasUserReview(spot) ? (
+      !hasUserReview(spot) ? (
       <ul className='reviews-list'>
         {reversedReviews.map((review, idx) => (
           <li className='review-list-items' key={`${idx}-${review.id}`}>
@@ -90,7 +108,12 @@ const ReviewListing = () => {
       </ul>
       ) :
       <div>
-        <button className='post-review-btn' onClick={goToPostReview}>Post Your Review</button>
+          <OpenModalButton
+          className='open-modal'
+          itemText='Post Your Review'
+          modalComponent={<ReviewFormModal spotId={spotId}/>}
+          />
+        {/* <button className='modal-btn' onClick={goToPostReview}>Post Your Review</button> */}
         <ul className='reviews-list'>
           {reversedReviews.map((review, idx) => (
             <li className='review-list-items' key={`${idx}-${review.id}`}>

@@ -37,6 +37,11 @@ module.exports = (sequelize, DataTypes) => {
           arg: true,
           msg: 'Review text is required'
         },
+        exists(value) {
+          if (!value) {
+            throw new ValidationError('Review ')
+          }
+        },
         isString(value) {
           if (typeof value !== 'string') {
             throw new ValidationError('Review must be in letters')
