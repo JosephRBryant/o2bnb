@@ -125,3 +125,7 @@ margin-bottom: 1.5rem;
   letter-spacing: .05rem;
   cursor: pointer;
 }
+
+.form-button button:hover {
+  background-color: #1883dc;
+}

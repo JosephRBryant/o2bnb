@@ -1,9 +1,19 @@
+import { csrfFetch } from "./csrf";
+
 const GET_SPOT_REVIEWS = 'reviews/getSpotReviews';
+const POST_REVIEW = 'reviews/postReview';
 
 const getSpotReviews = (reviews) => {
   return {
     type: GET_SPOT_REVIEWS,
     payload: reviews
+  }
+}
+
+const postReview = (review) => {
+  return {
+    type: POST_REVIEW,
+    payload: review
   }
 }
 
@@ -13,6 +23,37 @@ export const getSpotReviewsThunk = (spotId) => async (dispatch) => {
     if (res.ok) {
       const data = await res.json();
       dispatch(getSpotReviews(data))
+    } else {
+      throw res;
+    }
+  } catch (error) {
+    return error;
+  }
+}
+
+export const postReviewThunk = (reviewForm, spotId) => async (dispatch) => {
+  try {
+    const {userId, spotId, review, stars} = reviewForm;
+
+    const reviewData = {
+      userId,
+      spotId,
+      review,
+      stars
+    }
+
+    const options = {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(reviewData)
+    }
+
+    let res = await csrfFetch(`/api/spots/${spotId}/reviews`)
+
+    if (res.ok) {
+      const data = await res.json();
+      await dispatch(postReview(data));
+      return data;
     } else {
       throw res;
     }

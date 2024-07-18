@@ -31,3 +31,7 @@
   letter-spacing: .05rem;
   cursor: pointer;
 }
+
+.reservation-btn:hover {
+  background-color: #1883dc;
+}
