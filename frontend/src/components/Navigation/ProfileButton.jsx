@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { FaUserCircle } from 'react-icons/fa';
 import { RxHamburgerMenu } from "react-icons/rx";
 import * as sessionActions from '../../store/session';
@@ -11,6 +11,7 @@ import './ProfileButton.css';
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
   const ulRef = useRef();
 
@@ -34,31 +35,46 @@ function ProfileButton({ user }) {
     return () => document.removeEventListener('click', closeMenu);
   }, [showMenu]);
 
+  const goToManageSpots = (e) => {
+    e.preventDefault();
+    closeMenu();
+    navigate('/spots/current');
+  }
+
   const closeMenu = () => setShowMenu(false);
 
   const logout = (e) => {
     e.preventDefault();
     dispatch(sessionActions.logout());
     closeMenu();
+    navigate('/');
   };
 
-  const btnClassName = 'profile-button' + (showMenu ? ' profile-button-active' : '')
+  const goToCreateSpot = (e) => {
+    e.preventDefault();
+    navigate('/spots/new');
+  }
 
+  const createBtnClassName = 'create-btn' + (user ? '' : ' hidden')
+  const btnClassName = 'profile-button' + (showMenu ? ' profile-button-active' : '')
   const ulClassName = "profile-dropdown" + (showMenu ? " profile-button-active" : " hidden");
 
   return (
     <>
-      <button className={btnClassName} onClick={toggleMenu}>
-        <RxHamburgerMenu className='profile-hamburger'/>
-        <FaUserCircle className='profile-image'/>
-      </button>
+      <div className="profile-create-btns">
+        <a className={createBtnClassName} onClick={goToCreateSpot}>Create a Spot</a>
+        <button className={btnClassName} onClick={toggleMenu}>
+          <RxHamburgerMenu className='profile-hamburger'/>
+          <FaUserCircle className='profile-image'/>
+        </button>
+      </div>
       <ul className={ulClassName} ref={ulRef}>
         {user ? (
           <>
-            <li>Hello, {user.firstName}</li>
-            <li>{user.email}</li>
+            <li className='user-greeting'>Hello, {user.firstName}</li>
+            <li className='user-email'>{user.email}</li>
             <li>
-              <Link onClick={console.log('click clack paddywhack')} className='link-no-styling'>Manage Spots</Link>
+              <Link onClick={goToManageSpots} className='link-no-styling'>Manage Spots</Link>
             </li>
             <li>
               <Link onClick={logout} className='link-no-styling' id='log-out-btn'>Log Out</Link>

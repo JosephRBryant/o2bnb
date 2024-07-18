@@ -1,3 +1,28 @@
+.profile-create-btns {
+  display: flex;
+  align-items: center;
+  gap: .25rem;
+}
+
+.create-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 2rem;
+  width: 9.25rem;
+  color: #2196F3;
+  font-family: 'Roboto', sans-serif;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: bold;
+  letter-spacing: .05rem;
+  cursor: pointer;
+}
+
+.create-btn:hover {
+  color: #3ba7ff;
+}
+
 .profile-button {
   display: flex;
   align-items: center;
@@ -60,9 +85,15 @@
   background-color: #f7f7f7;
 }
 
-/* ul {
-  padding: 1rem 0;
-} */
+.user-greeting,
+.user-email {
+  cursor: default;
+}
+
+.user-greeting:hover,
+.user-email:hover {
+  background-color: #ffffff !important;
+}
 
 #log-out-btn {
   background-color: none;

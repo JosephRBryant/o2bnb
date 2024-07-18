@@ -27,7 +27,8 @@ module.exports = {
       },
       address: {
         type: Sequelize.STRING(50),
-        allowNull: false
+        allowNull: false,
+        unique: true
       },
       city: {
         type: Sequelize.STRING(30),
@@ -51,10 +52,11 @@ module.exports = {
       },
       name: {
         type: Sequelize.STRING(49),
-        allowNull: false
+        allowNull: false,
+        unique: true
       },
       description: {
-        type: Sequelize.STRING(240),
+        type: Sequelize.STRING(1000),
         allowNull: false
       },
       price: {

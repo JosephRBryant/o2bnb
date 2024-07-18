@@ -1,4 +1,18 @@
-main {
-  display: flex;
-  justify-content: flex-start;
+.splash-main {
+  display: grid;
+  justify-content: center;
+  gap: 2.5rem 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(238px, 1fr));
+  /* grid-template-rows: repeat(auto-fit, minmax(300px, 1fr)); */
+  /* max-width: calc(5 * 238px + 16px); */
+  padding: 0 7rem;
+  margin: 1rem 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (min-width: 1430px) {
+  .splash-main {
+    grid-template-columns: repeat(4, minmax(238px, 1fr));
+  }
 }

@@ -11,7 +11,7 @@ const Splash = () => {
 
   useEffect(() => {
     const getData = async () => {
-      dispatch(getAllSpotsThunk());
+      await dispatch(getAllSpotsThunk());
       setIsLoaded(true)
     }
     if (!isLoaded && !spots.length) {
@@ -22,13 +22,14 @@ const Splash = () => {
   if (!spots) {
     return <h1>Loading</h1>
   }
+
   spots = spots.filter(spot => spot.previewImage !== 'No Image');
-  console.log('spots', spots);
+
   return (
-    <main>
+    <main className="splash-main">
       {spots.map((spot, idx) => (
-        <div key={`${idx}-${spot.name}`} className="spot-tile">
-          <SpotTile spot={spot}/>
+        <div key={`${idx}-${spot.name}`} className="spot-tile" data-tooltip={spot.name}>
+          <SpotTile  spot={spot}/>
         </div>
       ))}
     </main>

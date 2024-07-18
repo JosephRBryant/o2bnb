@@ -1,0 +1,37 @@
+.star-price-rating {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.spot-price {
+  color: #222;
+  font-size: 0.875rem;
+}
+.spot-price span {
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.star-rating-reviews {
+  display: flex;
+  gap: .15rem;;
+  font-size: .875rem;
+}
+
+.reservation-btn {
+  height: 3rem;
+  margin-top: 1rem;
+  border-radius: .5rem;
+  border: none;
+  background-color: #2196F3;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: bold;
+  letter-spacing: .05rem;
+  cursor: pointer;
+}
+
+.reservation-btn:hover {
+  background-color: #1883dc;
+}

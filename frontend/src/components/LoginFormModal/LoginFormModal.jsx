@@ -1,11 +1,14 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import * as sessionActions from '../../store/session';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useModal } from "../../context/Modal";
 import './LoginForm.css';
 
 function LoginFormModal() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const sessionUser = useSelector(state => state.session.user)
   const [credential, setCredential] = useState('');
   const [password, setPassword] = useState('');
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true)
@@ -13,25 +16,27 @@ function LoginFormModal() {
   const [loginError, setLoginError] = useState('');
   const { closeModal } = useModal();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
-    return dispatch(sessionActions.login({ credential, password }))
-    .then(closeModal)
-    .catch(async (res) => {
-        const data = await res.json();
-        if (data && data.errors) {
-          setErrors(data.errors);
-          setLoginError(data.errors);
-        }
+    try {
+      await dispatch(sessionActions.login({ credential, password }))
+      navigate('/');
+      closeModal();
+    } catch (res) {
+      const data = await res.json();
+      if (data?.message) {
+        setErrors(data.message);
+        setLoginError(data.message);
       }
-    );
+    }
   };
 
-  const demoUser = (e) => {
+  const demoUser = async (e) => {
     e.preventDefault();
-    return dispatch(sessionActions.login({credential: 'Demo-lition', password: 'password'}))
-    .then(closeModal)
+    await dispatch(sessionActions.login({credential: 'Demo-lition', password: 'password'}))
+    closeModal();
+    navigate('/')
   }
 
   const handleCredentialChange = (e) => {
@@ -44,10 +49,14 @@ function LoginFormModal() {
     setIsSubmitDisabled(e.target.value.length < 6 || credential.length < 4)
   }
 
+  console.log('login errors', errors);
+
   return (
-    <div className="loginForm">
-      <h1>Log In</h1>
-      <h2>{loginError}</h2>
+    <div className="login-form">
+      <h1 className="login-header">Log in</h1>
+      <div className="credentials-error-container">
+        <h2 className="credentials-error">{loginError}</h2>
+      </div>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -65,7 +74,7 @@ function LoginFormModal() {
         />
         {errors.credential && <p>{errors.credential}</p>}
         <button className='login-submit' type="submit" disabled={isSubmitDisabled}>Log In</button>
-        <a onClick={demoUser} className='demo-user'>Demo User</a>
+        <a onClick={demoUser} className='demo-user'>Log in as Demo User</a>
       </form>
     </div>
   );

@@ -17,99 +17,111 @@ function SignupFormModal() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (password === confirmPassword) {
-      setErrors({});
-      return dispatch(
-        sessionActions.signup({
-          email,
-          username,
-          firstName,
-          lastName,
-          password
-        })
-      )
-        .then(closeModal)
-        .catch(async (res) => {
-        const data = await res.json();
-        if (data?.errors) {
-          setErrors(data.errors);
-        }
-      });
-    }
-    return setErrors({
-      confirmPassword: 'Confirm Password field must be the same as the Password field'
-    });
+    setErrors({});
+
+    return dispatch(
+      sessionActions.signup({
+        email,
+        username,
+        firstName,
+        lastName,
+        password
+      })
+    )
+    .then(closeModal)
+    .catch(async (res) => {
+      const data = await res.json();
+      if (data?.errors) {
+        setErrors(data.errors)
+      }
+    })
   };
 
   return (
-    <>
+    <div className="signup-form">
       <h1>Sign Up</h1>
       <form onSubmit={handleSubmit}>
-        <label>
-          Email
-          <input
+        <div className="label-error">
+          <label htmlFor="email">Email</label>
+          {errors.email && <p>{errors.email}</p>}
+        </div>
+        <input
             type="text"
+            name="email"
+            id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            required
+            placeholder="Email"
+            // required
           />
-        </label>
-        {errors.email && <p>{errors.email}</p>}
-        <label>
-          Username
-          <input
+        <div className="label-error">
+          <label htmlFor="username">Username</label>
+          {errors.firstName && <p>{errors.username}</p>}
+        </div>
+        <input
             type="text"
+            name="username"
+            id="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            required
+            placeholder="Username"
+            // required
           />
-        </label>
-        {errors.firstName && <p>{errors.username}</p>}
-        <label>
-          First Name
-          <input
+        <div className="label-error">
+          <label htmlFor="first-name">First Name</label>
+          {errors.firstName && <p>{errors.firstName}</p>}
+        </div>
+        <input
             type="text"
+            name="first-name"
+            id="first-name"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
-            required
+            placeholder="First Name"
+            // required
           />
-        </label>
-        {errors.firstName && <p>{errors.firstName}</p>}
-        <label>
-          Last Name
-          <input
+        <div className="label-error">
+          <label htmlFor="last-name">Last Name</label>
+          {errors.lastName && <p>{errors.lastName}</p>}
+        </div>
+        <input
             type="text"
+            name="last-name"
+            id="last-name"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
-            required
+            placeholder="Last Name"
+            // required
           />
-        </label>
-        {errors.lastName && <p>{errors.lastName}</p>}
-        <label>
-          Password
-          <input
-            type="text"
+        <div className="label-error">
+          <label htmlFor="password">Password</label>
+          {errors.password && <p>{errors.password}</p>}
+        </div>
+        <input
+            type="password"
+            name="password"
+            id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
+            placeholder="Password"
+            // required
           />
-        </label>
-        {errors.password && <p>{errors.password}</p>}
-        <label>
-          Confirm Password
-          <input
-            type="text"
+        <div className="label-error">
+          <label htmlFor="confirm-password">Confirm Password</label>
+          {errors.confirmPassword && (<p>{errors.confirmPassword}</p>)}
+        </div>
+        <input
+            type="password"
+            name="confirm-password"
+            id="confirm-password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            required
+            placeholder="Confirm Password"
+            // required
           />
-        </label>
-        {errors.confirmPassword && (
-          <p>{errors.confirmPassword}</p>
-        )}
-        <button type="submit">Sign Up</button>
+        <button className="signup-submit" type="submit" disabled={errors.length}>Sign Up</button>
       </form>
-    </>
+    </div>
   );
 }
 
