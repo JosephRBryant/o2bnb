@@ -38,7 +38,6 @@ function Layout() {
   );
 }
 
-
 function App() {
   const router = [
     {
