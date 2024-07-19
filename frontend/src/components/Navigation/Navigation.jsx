@@ -21,7 +21,7 @@ function Navigation({ isLoaded }){
       <ul className='nav-list'>
         <li>
           <NavLink className='home' to="/">
-            <img src="../../../dist/favicon.svg" alt="" />
+            <img src="https://toginet.com/images/o2bnb/favicon.svg" alt="" />
             o2bnb
           </NavLink>
         </li>
