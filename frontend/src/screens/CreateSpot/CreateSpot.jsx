@@ -117,16 +117,6 @@ function CreateSpot() {
     }
   }
 
-  // function validateImage(label) {
-  //   if (label === 'previewImage' && !spotForm.previewImage.length) {
-  //     return 'Preview image is required';
-  //   }
-  //   if (!spotForm[label].endsWith('.png') && !spotForm[label].endsWith('.jpg') && !spotForm[label].endsWith('.jpeg')) {
-  //     return 'Image URL must end in .png, .jpg, or .jpeg';
-  //   }
-  //   return;
-  // }
-
   return (
     <main className="create-spot-main">
       <header className='create-spot-header'>
