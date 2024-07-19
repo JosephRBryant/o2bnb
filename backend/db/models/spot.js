@@ -36,10 +36,6 @@ module.exports = (sequelize, DataTypes) => {
     address: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: {
-        arg: true,
-        msg: 'Address already in use'
-      },
       validate: {
         notNull: {
           arg: true,
