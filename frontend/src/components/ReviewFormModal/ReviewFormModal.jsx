@@ -1,13 +1,17 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FaStar, FaRegStar } from "react-icons/fa";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { postReviewThunk } from "../../store/review";
+import { getSpotReviewsThunk } from '../../store/review';
 import './ReviewFormModal.css'
-import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useModal } from "../../context/Modal";
+import { getSpotDetailsThunk, getUserSpotsThunk } from "../../store/spots";
 
 
 function ReviewFormModal({spotId}) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const user = useSelector(state => state.session.user);
   const [reviewForm, setReviewForm] = useState({
     userId: user.id,
@@ -15,11 +19,12 @@ function ReviewFormModal({spotId}) {
     review: '',
     stars: 0
   })
-  const [review, setReview] = useState('');
   const [stars, setStars] = useState([false, false, false, false, false]);
   const [isLocked, setIsLocked] = useState(false);
   const [rating, setRating] = useState(0);
-  const [reviewError, setReviewError] = useState({});
+  const [isDisabled, setIsDisabled] = useState(true);
+  const [errors, setErrors] = useState({});
+  const { closeModal } = useModal();
 
   function updateStars(e) {
     const index = Number(e.target.attributes.class.value.slice(-1));
@@ -61,13 +66,12 @@ function ReviewFormModal({spotId}) {
         setIsLocked(true);
         setRating(index + 1);
       }
+      console.log('islocked from onclick', isLocked);
       return stars;
     }
   }
 
   function updateReviewForm(e, label) {
-    console.log('stars', stars);
-    console.log('get rating', getRating(stars));
     getRating(stars);
     setReviewForm(prev => {
       const newReviewForm = {...prev};
@@ -76,6 +80,7 @@ function ReviewFormModal({spotId}) {
       } else {
         newReviewForm.stars = getRating(stars);
       }
+      console.log('new rev form', newReviewForm.stars);
       return newReviewForm;
     })
   }
@@ -91,31 +96,39 @@ function ReviewFormModal({spotId}) {
     return stars.findIndex(star => star === false)
   }
 
-  function handleSubmit(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrors({});
 
     const updatedReviewForm = {
       ...reviewForm,
       stars: getRating(stars)
     };
 
-    setReviewForm(updatedReviewForm);
-
-    setReviewForm(prev => {
-      const newReviewForm = {
-        ...prev,
-        stars: getRating(stars)
-      };
-      console.log('Review form on submit', newReviewForm);
-      return newReviewForm;
-    })
+    try {
+      const res = await dispatch(postReviewThunk(updatedReviewForm));
+      if (!res.id) {
+        const err = await res.json();
+        const backendErrors = {};
+        backendErrors.message = err.message;
+        setErrors(err.errors);
+        console.log(err.errors, err.message, 'testing errs')
+      } else {
+        closeModal();
+        await dispatch(getSpotReviewsThunk(spotId));
+        await dispatch(getSpotDetailsThunk(spotId));
+      }
+    } catch (error) {
+      return error;
+    }
   }
 
   return (
     <div className="post-review-form">
       <div className="review-header">
         <h1>How was your stay?</h1>
-        {/* <p>reviewError</p> */}
+        <p>{errors.review}</p>
+        <p>{errors.stars}</p>
       </div>
       <textarea name="review" id="review" onChange={(e) => updateReviewForm(e, 'review')} value={reviewForm.review} placeholder="Leave your review here..."></textarea>
       <div className="star-container">
@@ -126,8 +139,20 @@ function ReviewFormModal({spotId}) {
             </div>
           ))}
         </ul>
+        stars
       </div>
-      <button onClick={handleSubmit} className="review-submit">Submit Your Review</button>
+      <button
+        onClick={handleSubmit}
+        className={
+          reviewForm.review.length < 10 ||
+          (!stars.includes(true) && !isLocked) ?
+          'disabled-review-submit' :
+          'review-submit'}
+        disabled={
+          reviewForm.review.length < 10 ||
+          (!stars.includes(true) && !isLocked) ?
+          true : false}
+        >Submit Your Review</button>
     </div>
   )
 }

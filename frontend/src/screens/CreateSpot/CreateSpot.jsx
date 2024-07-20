@@ -88,7 +88,6 @@ function CreateSpot() {
         backendErrors.message = err.message;
         setErrors(err.errors);
       } else {
-        console.log('res', res);
         navigate(`/spots/${res.id}`)
       }
     } catch (error) {
