@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { getSpotReviewsThunk } from '../../store/review';
 import { getSpotDetailsThunk } from '../../store/spots';
 import ReviewFormModal from '../ReviewFormModal/ReviewFormModal';
+import DeleteReviewModal from '../DeleteReviewModal/DeleteReviewModal';
 import OpenModalButton from '../../screens/ManageSpots/OpenModalButton';
 import './ReviewListing.css';
 
@@ -52,6 +53,11 @@ const ReviewListing = () => {
     return false
   }
 
+  function isUserReview(review) {
+    // console.log('isUserReview?', review, sessionUser, review.userId === sessionUser.id);
+    review.userId === sessionUser.id ? true : false
+  }
+
   function hasNoReviews(spot) {
     if (!isUserSpot(spot) && !reviews.length) {
       return true;
@@ -60,16 +66,18 @@ const ReviewListing = () => {
   }
 
   function hasUserReview(spot) {
+    // if spot is not user's and no reviews are user's
     if (!isUserSpot(spot) && !reviews.some(e => e.userId === sessionUser.id)) {
-      return true;
+      return false;
     }
-    return false;
+    return true;
   }
 
   let reversedReviews = reviews.slice().reverse();
 
   return (
     <>
+    {/* if user is not logged in or spot belongs to user */}
       {!sessionUser || isUserSpot(spot) ? (
         <ul className='reviews-list'>
         {reversedReviews.map((review, idx) => (
@@ -83,10 +91,11 @@ const ReviewListing = () => {
         ))}
       </ul>
       ) :
+      // if spot has no reviews
       hasNoReviews(spot) ? (
         <div>
           <OpenModalButton
-          className='open-modal'
+          className='post-review-btn'
           itemText='Post Your Review'
           modalComponent={<ReviewFormModal spotId={spotId}/>}
           />
@@ -94,7 +103,8 @@ const ReviewListing = () => {
           <h2>Be the first to post a review!</h2>
         </div>
       ) :
-      !hasUserReview(spot) ? (
+      // if user has a review for the spot
+      hasUserReview(spot) ? (
       <ul className='reviews-list'>
         {reversedReviews.map((review, idx) => (
           <li className='review-list-items' key={`${idx}-${review.id}`}>
@@ -103,13 +113,20 @@ const ReviewListing = () => {
             <p>
             {review.review}
             </p>
+            {review.userId === sessionUser.id ?
+            <OpenModalButton
+            className='open-delete-modal'
+            itemText= 'Delete'
+            modalComponent={<DeleteReviewModal review={review}/>}
+             /> :
+             null}
           </li>
         ))}
       </ul>
       ) :
       <div>
           <OpenModalButton
-          className='open-modal'
+          className='post-review-btn'
           itemText='Post Your Review'
           modalComponent={<ReviewFormModal spotId={spotId}/>}
           />

@@ -1,0 +1,15 @@
+.delete-btn {
+  background-color: #db1a1a;
+}
+
+.delete-btn:hover {
+  background-color: #e91f1f;
+}
+
+.close-btn:hover {
+  background-color: #6b6b6b;
+}
+
+.delete-review-contaier {
+  
+}

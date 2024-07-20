@@ -2,6 +2,7 @@ import { csrfFetch } from "./csrf";
 
 const GET_SPOT_REVIEWS = 'reviews/getSpotReviews';
 const POST_REVIEW = 'reviews/postReview';
+const DELETE_REVIEW = 'reviews/deleteReview';
 
 const getSpotReviews = (reviews) => {
   return {
@@ -14,6 +15,13 @@ const postReview = (review) => {
   return {
     type: POST_REVIEW,
     payload: review
+  }
+}
+
+const deleteReview = (deletedReview) => {
+  return {
+    type: DELETE_REVIEW,
+    payload: deletedReview
   }
 }
 
@@ -56,6 +64,27 @@ export const postReviewThunk = (reviewForm) => async (dispatch) => {
       return data;
     } else {
       throw res;
+    }
+  } catch (error) {
+    return error;
+  }
+}
+
+export const deleteReviewThunk = (review) => async (dispatch) => {
+  try {
+    const options = {
+      method: 'DELETE',
+      header: {'Content-Type': 'application/json'},
+      body: JSON.stringify(review)
+    };
+
+    const res = await csrfFetch(`/api/reviews/${review.id}`, options);
+
+    if (res.ok) {
+      const data = await res.json();
+      dispatch(deleteReview(data));
+    } else {
+      throw res
     }
   } catch (error) {
     return error;

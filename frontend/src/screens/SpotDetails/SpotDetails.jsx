@@ -11,27 +11,24 @@ const SpotDetails = () => {
   const dispatch = useDispatch();
   const { spotId } = useParams();
   const [isLoaded, setIsLoaded] = useState(false);
-  const [spot, setSpot] = useState({});
   const placeholder = 'https://placehold.co/500x500/2196F3/fff/?font=raleway&text=image';
 
   let previewImage;
   let spotImages;
   // step 8
   const spotDetails = useSelector((state) => state.spotState.spotDetails)
-  const reviews = useSelector(state => state.reviewState.spotReviews);
 
   useEffect(()=> {
     const getData = async() => {
       // grab data from backend
       await dispatch(getSpotDetailsThunk(Number(spotId)));
       setIsLoaded(true);
-      setSpot({...spotDetails});
     }
     // we are not loaded
     if (!isLoaded) {
       getData()
     }
-  })
+  }, [dispatch, isLoaded, spotId])
 
   if(!isLoaded) {
     return <h1>Loading...</h1>
@@ -69,16 +66,16 @@ const SpotDetails = () => {
             <p>{spotDetails.description}</p>
           </div>
           <div className="spot-info">
-            <SpotInfo spot={spot}/>
+            <SpotInfo spot={spotDetails}/>
           </div>
         </div>
         <div className="reviews-container">
           <h2 className="rating-count">
             <div className="rating">
-              <FaStar /> {!spot.numReviews ? 'New' : spot.avgStarRating}
+              <FaStar /> {!spotDetails.numReviews ? 'New' : spotDetails.avgStarRating}
             </div>
             <div className="count">
-              {spot.numReviews > 0 && `• ${spot.numReviews} ${spot.numReviews === 1 ? 'review' : 'reviews'}`}
+              {spotDetails.numReviews > 0 && `• ${spotDetails.numReviews} ${spotDetails.numReviews === 1 ? 'review' : 'reviews'}`}
             </div>
           </h2>
           <ReviewListing />
