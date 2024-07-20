@@ -31,7 +31,7 @@ export const getSpotReviewsThunk = (spotId) => async (dispatch) => {
   }
 }
 
-export const postReviewThunk = (reviewForm, spotId) => async (dispatch) => {
+export const postReviewThunk = (reviewForm) => async (dispatch) => {
   try {
     const {userId, spotId, review, stars} = reviewForm;
 
@@ -48,7 +48,7 @@ export const postReviewThunk = (reviewForm, spotId) => async (dispatch) => {
       body: JSON.stringify(reviewData)
     }
 
-    let res = await csrfFetch(`/api/spots/${spotId}/reviews`)
+    let res = await csrfFetch(`/api/spots/${spotId}/reviews`, options)
 
     if (res.ok) {
       const data = await res.json();
@@ -77,6 +77,13 @@ const reviewsReducer = (state = initialState, action) => {
       for (let review in action.payload) {
         newState.byId[review.id] = review
       }
+      return newState;
+    case POST_REVIEW:
+      newState = {...state};
+      console.log('action payload', action.payload.review);
+      newState.spotReviews.Reviews = [action.payload, ...newState.spotReviews.Reviews];
+      console.log('spot reviews', state.spotReviews.Reviews);
+      newState.byId = {...newState.byId, [action.payload.id]: action.payload};
       return newState;
     default:
       return state;

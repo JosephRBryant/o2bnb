@@ -3,7 +3,7 @@ import './SpotInfo.css';
 
 const SpotInfo = ({spot}) => {
 
-  const handleReserveSubmit = (e) => {
+  const handleReserveSubmit = () => {
     alert('Feature coming soon');
   }
 

@@ -28,6 +28,10 @@ p {
   font-family: 'Roboto', sans-serif;
 }
 
+ul {
+  padding: 0;
+}
+
 form input {
   height: 2rem;
   font-size: 1rem;

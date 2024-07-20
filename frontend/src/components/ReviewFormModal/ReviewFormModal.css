@@ -12,7 +12,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 3rem;
+  padding-bottom: 3rem;
 }
 
 form {
@@ -36,6 +36,7 @@ form {
 
 .star-container {
   display: flex;
+  align-items: center;
   gap: .75rem;
   margin: 2rem 0;
   font-family: 'Roboto', sans-serif;
@@ -45,6 +46,8 @@ form {
 .star-ul {
   display: flex;
   list-style: none;
+  margin: 0;
+  padding-top: .3rem;
 }
 
 .star-li {
@@ -100,6 +103,21 @@ form {
   font-family: 'Roboto', sans-serif;
   font-weight: bold;
 }
+
+.disabled-review-submit {
+  height: 4rem;
+  width: 100%;
+  cursor: default;
+  background-color: #364f63;
+  color: #4a6983;
+  letter-spacing: .1rem;
+  border: none;
+  border-radius: .25rem;
+  font-size: 1rem;
+  font-family: 'Roboto', sans-serif;
+  font-weight: bold;
+}
+
 
 .review-submit:hover {
   background-color: #1883dc;

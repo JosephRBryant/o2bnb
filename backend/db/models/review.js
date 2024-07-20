@@ -39,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         exists(value) {
           if (!value) {
-            throw new ValidationError('Review ')
+            throw new ValidationError('Review is required')
           }
         },
         isString(value) {
