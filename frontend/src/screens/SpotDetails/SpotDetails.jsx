@@ -4,8 +4,8 @@ import { useParams } from "react-router-dom";
 import { getSpotDetailsThunk } from "../../store/spots";
 import { FaStar } from "react-icons/fa";
 import SpotInfo from "../../components/Spots/SpotInfo";
-import './SpotDetails.css';
 import ReviewListing from "../../components/Reviews/ReviewListing";
+import './SpotDetails.css';
 
 const SpotDetails = () => {
   const dispatch = useDispatch();
@@ -15,7 +15,7 @@ const SpotDetails = () => {
 
   let previewImage;
   let spotImages;
-  // step 8
+
   const spotDetails = useSelector((state) => state.spotState.spotDetails)
 
   useEffect(()=> {

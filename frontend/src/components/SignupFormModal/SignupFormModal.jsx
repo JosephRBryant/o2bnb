@@ -37,6 +37,13 @@ function SignupFormModal() {
     })
   };
 
+  function areFieldsEmpty() {
+    if (!email.length || !username.length || !firstName.length || !lastName.length || !password.length) {
+      return true
+    }
+    return false;
+  }
+
   return (
     <div className="signup-form">
       <h1>Sign Up</h1>
@@ -119,7 +126,7 @@ function SignupFormModal() {
             placeholder="Confirm Password"
             // required
           />
-        <button className="signup-submit" type="submit" disabled={errors.length}>Sign Up</button>
+        <button className={(areFieldsEmpty() || username.length < 4 || password.length < 6 || password !== confirmPassword) ? "disabled-signup-submit disabled" : "signup-submit"} type="submit" disabled={areFieldsEmpty() || username.length < 4 || password.length < 6 || password !== confirmPassword}>Sign Up</button>
       </form>
     </div>
   );

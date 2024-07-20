@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { getSpotReviewsThunk } from '../../store/review';
 import { getSpotDetailsThunk } from '../../store/spots';
 import ReviewFormModal from '../ReviewFormModal/ReviewFormModal';
@@ -10,7 +10,6 @@ import './ReviewListing.css';
 
 const ReviewListing = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   let { spotId } = useParams();
   const sessionUser = useSelector(state => state.session.user)
   const [isLoaded, setIsLoaded] = useState(false);
@@ -54,7 +53,6 @@ const ReviewListing = () => {
   }
 
   function isUserReview(review) {
-    // console.log('isUserReview?', review, sessionUser, review.userId === sessionUser.id);
     review.userId === sessionUser.id ? true : false
   }
 

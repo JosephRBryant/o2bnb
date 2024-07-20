@@ -1,12 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useModal } from "../../context/Modal";
-import { useNavigate } from "react-router-dom";
 import { deleteSpotThunk, getUserSpotsThunk } from "../../store/spots";
 import './DeleteFormModal.css';
 
 function DeleteFormModal({spot}) {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const sessionUser = useSelector(state => state.session.user);
 
   const { closeModal } = useModal();

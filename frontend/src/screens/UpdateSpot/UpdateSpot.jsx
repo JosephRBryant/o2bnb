@@ -9,111 +9,68 @@ function UpdateSpot() {
   const navigate = useNavigate();
   const [isLoaded, setIsLoaded] = useState(false);
   const [errors, setErrors] = useState({});
-  const spots = useSelector(state => state.spotState.allSpots);
   const spotDetails = useSelector(state => state.spotState.spotDetails);
   const { spotId } = useParams();
-  // const [prevImgErr, setPrevImgErr] = useState('');
-  // const [imgAErr, setImgAErr] = useState('');
-  // const [imgBErr, setImgBErr] = useState('');
-  // const [imgCErr, setImgCErr] = useState('');
-  // const [imgDErr, setImgDErr] = useState('');
-
-  // console.log('spotDetails images', spotDetails.SpotImages);
-  // const [ previewImage, imageA, imageB, imageC, imageD ] = spotDetails.SpotImages;
-  // console.log('destructured images', previewImage, imageA, imageB, imageC, imageD);
-  console.log(spotDetails.address)
 
   const [spotForm, setSpotForm] = useState({
-    address: spotDetails.address,
-    city: spotDetails.city,
-    state: spotDetails.state,
-    country: spotDetails.country,
-    lat: spotDetails.lat,
-    lng: spotDetails.lng,
-    name: spotDetails.name,
-    description: spotDetails.description,
-    price: spotDetails.price,
-    // previewImage: '',
-    // imageA: '',
-    // imageB: '',
-    // imageC: '',
-    // imageD: '',
+    address: '',
+    city: '',
+    state: '',
+    country: '',
+    lat: null,
+    lng: null,
+    name: '',
+    description: '',
+    price: null
   })
 
   useEffect(() => {
     const getData = async() => {
       await dispatch(getSpotDetailsThunk(Number(spotId)));
       setIsLoaded(true);
-      // setSpotForm({...spotDetails});
     }
     if (!isLoaded) {
       getData()
     }
-  },[dispatch, isLoaded, spotDetails, spotId])
+  },[dispatch, spotId]);
+
+  useEffect(() => {
+    if (isLoaded && spotDetails) {
+      setSpotForm({
+        address: spotDetails.address || '',
+        city: spotDetails.city || '',
+        state: spotDetails.state || '',
+        country: spotDetails.country || '',
+        lat: spotDetails.lat || null,
+        lng: spotDetails.lng || null,
+        name: spotDetails.name || '',
+        description: spotDetails.description || '',
+        price: spotDetails.price || null
+      })
+    }
+  }, [isLoaded, spotDetails])
 
   if(!isLoaded) {
     return <h1>Loading...</h1>
   }
-
-  // console.log('spotform.previewImage check', previewImage);
 
   const onSubmit = async (e) => {
     e.preventDefault()
     setErrors({});
 
     try {
-      // if (!previewImage || previewImage === '') {
-      //   setPrevImgErr('Preview image is required');
-      //   delete spotForm.previewImage;
-      // } else if (endsWithImage(spotForm.previewImage) === false) {
-      //   setPrevImgErr('Image URL must end in .png, .jpg, or .jpeg');
-      //   delete spotForm.previewImage;
-      // }
-
-      // if (spotForm.imageA && !endsWithImage(spotForm.imageA)) {
-      //   setImgAErr('Image URL must end in .png, .jpg, or .jpeg');
-      //   delete spotForm.imageA;
-      // } else if (!spotForm.imageA) {
-      //   delete spotForm.imageA;
-      // }
-
-      // if (spotForm.imageB && !endsWithImage(spotForm.imageB)) {
-      //   setImgBErr('Image URL must end in .png, .jpg, or .jpeg');
-      //   delete spotForm.imageB;
-      // } else if (!spotForm.imageB) {
-      //   delete spotForm.imageB;
-      // }
-
-      // if (spotForm.imageC && !endsWithImage(spotForm.imageC)) {
-      //   setImgCErr('Image URL must end in .png, .jpg, or .jpeg');
-      //   delete spotForm.imageC;
-      // } else if (!spotForm.imageC) {
-      //   delete spotForm.imageC;
-      // }
-
-      // if (spotForm.imageD && !endsWithImage(spotForm.imageD)) {
-      //   setImgDErr('Image URL must end in .png, .jpg, or .jpeg');
-      //   delete spotForm.imageD;
-      // } else if (!spotForm.imageD) {
-      //   delete spotForm.imageD;
-      // }
-
       spotForm.lat = Number(spotForm.lat);
       spotForm.lng = Number(spotForm.lng);
       spotForm.price = Number(spotForm.price);
 
       const res = await dispatch(updateSpotThunk(spotForm, spotId));
-      console.log('spotform on sumbit', spotForm);
-      console.log('res on sumbit', res);
 
       if (!res.id) {
         const err = await res.json();
-        console.log('err from res on sumbit', err);
         const backendErrors = {};
         backendErrors.message = err.message;
         setErrors(err.errors);
       } else {
-        console.log('res', res);
         navigate(`/spots/${res.id}`)
       }
     } catch (error) {
@@ -125,7 +82,6 @@ function UpdateSpot() {
     setSpotForm(prev => {
       const newSpotForm = {...prev};
       newSpotForm[label] = e.target.value;
-      console.log('new spot form in updater', newSpotForm);
       return newSpotForm;
     })
   }
@@ -141,16 +97,6 @@ function UpdateSpot() {
       return true
     }
   }
-
-  // function validateImage(label) {
-  //   if (label === 'previewImage' && !spotForm.previewImage.length) {
-  //     return 'Preview image is required';
-  //   }
-  //   if (!spotForm[label].endsWith('.png') && !spotForm[label].endsWith('.jpg') && !spotForm[label].endsWith('.jpeg')) {
-  //     return 'Image URL must end in .png, .jpg, or .jpeg';
-  //   }
-  //   return;
-  // }
 
   return (
     <main className="update-spot-main">
@@ -232,31 +178,6 @@ function UpdateSpot() {
             <input type="text" name="price" id="price" onChange={(e) => updateSpotForm(e, 'price')} value={spotForm.price} placeholder="Price per night (USD)" />
           </div>
         </div>
-        {/* <div className="form-photos">
-          <h2>Liven up your spot with photos</h2>
-          <p className='sub-header'>Submit a link to at least one photo to publish your spot</p>
-          <div className="image-url-errors">
-            <input type="text" name="previewImage" id="previewImage" onChange={(e) => updateSpotForm(e, 'previewImage')} value={previewImage.url} placeholder="Preview Image URL"/>
-            <p>{!prevImgErr && errors.url ? errors.url : prevImgErr}</p>
-          </div>
-          <div className="image-url-errors">
-            <input type="text" name="imageA" id="imageA" onChange={(e) => updateSpotForm(e, 'imageA')} value={imageA.url} placeholder="Image URL" />
-            <p>{imgAErr}</p>
-          </div>
-          <div className="image-url-errors">
-            <input type="text" name="imageB" id="imageB" onChange={(e) => updateSpotForm(e, 'imageB')} value={imageB.url} placeholder="Image URL" />
-            <p>{imgBErr}</p>
-          </div>
-          <div className="image-url-errors">
-            <input type="text" name="imageC" id="imageC" onChange={(e) => updateSpotForm(e, 'imageC')} value={imageC.url} placeholder="Image URL" />
-            <p>{imgCErr}</p>
-          </div>
-          <div className="image-url-errors">
-            <input type="text" name="imageD" id="imageD" onChange={(e) => updateSpotForm(e, 'imageD')} value={imageD.url} placeholder="Image URL" />
-            <p>{imgDErr}</p>
-          </div>
-
-        </div> */}
         <div className="form-button">
           <button type="submit">Update Spot</button>
         </div>
