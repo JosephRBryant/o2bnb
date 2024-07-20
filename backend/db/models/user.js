@@ -53,7 +53,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: {
         arg: true,
-        msg: 'User with that username already exists'
+        msg: 'User must be unique'
       },
       validate: {
         len: [4,30],

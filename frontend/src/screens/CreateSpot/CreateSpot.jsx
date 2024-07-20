@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { createSpotThunk } from '../../store/spots';
 import './CreateSpot.css'
@@ -7,9 +7,7 @@ import { useState } from 'react';
 function CreateSpot() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [isLoaded, setIsLoaded] = useState(false);
   const [errors, setErrors] = useState({});
-  const spots = useSelector(state => state.spotState.allSpots)
   const [prevImgErr, setPrevImgErr] = useState('');
   const [imgAErr, setImgAErr] = useState('');
   const [imgBErr, setImgBErr] = useState('');
@@ -77,8 +75,6 @@ function CreateSpot() {
       spotForm.lat = Number(spotForm.lat);
       spotForm.lng = Number(spotForm.lng);
       spotForm.price = Number(spotForm.price);
-
-      console.log('spotform', spotForm);
 
       const res = await dispatch(createSpotThunk(spotForm));
 

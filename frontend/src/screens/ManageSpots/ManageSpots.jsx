@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { restoreUser } from '../../store/session';
-import { getUserSpotsThunk, deleteSpotThunk } from '../../store/spots';
+import { getUserSpotsThunk } from '../../store/spots';
 import SpotTile from '../../components/Spots';
 import OpenModalButton from './OpenModalButton';
 import DeleteFormModal from '../../components/DeleteFormModal/DeleteFormModal';
@@ -35,13 +35,6 @@ const ManageSpot = () => {
   const goToCreateSpot = (e) => {
     e.preventDefault();
     navigate('/spots/new');
-  }
-
-  const handleDelete = async (e, spot) => {
-    e.preventDefault();
-    e.stopPropagation();
-    await dispatch(deleteSpotThunk(spot));
-    await dispatch(getUserSpotsThunk(sessionUser.id));
   }
 
   if (!isLoaded) {

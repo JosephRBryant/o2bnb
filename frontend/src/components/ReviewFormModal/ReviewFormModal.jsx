@@ -3,15 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { FaStar, FaRegStar } from "react-icons/fa";
 import { postReviewThunk } from "../../store/review";
 import { getSpotReviewsThunk } from '../../store/review';
-import './ReviewFormModal.css'
-import { useNavigate } from "react-router-dom";
 import { useModal } from "../../context/Modal";
-import { getSpotDetailsThunk, getUserSpotsThunk } from "../../store/spots";
+import { getSpotDetailsThunk } from "../../store/spots";
+import './ReviewFormModal.css';
 
 
 function ReviewFormModal({spotId}) {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const user = useSelector(state => state.session.user);
   const [reviewForm, setReviewForm] = useState({
     userId: user.id,
@@ -22,7 +20,6 @@ function ReviewFormModal({spotId}) {
   const [stars, setStars] = useState([false, false, false, false, false]);
   const [isLocked, setIsLocked] = useState(false);
   const [rating, setRating] = useState(0);
-  const [isDisabled, setIsDisabled] = useState(true);
   const [errors, setErrors] = useState({});
   const { closeModal } = useModal();
 
@@ -66,7 +63,6 @@ function ReviewFormModal({spotId}) {
         setIsLocked(true);
         setRating(index + 1);
       }
-      console.log('islocked from onclick', isLocked);
       return stars;
     }
   }
@@ -80,18 +76,15 @@ function ReviewFormModal({spotId}) {
       } else {
         newReviewForm.stars = getRating(stars);
       }
-      console.log('new rev form', newReviewForm.stars);
       return newReviewForm;
     })
   }
 
   function getRating(stars) {
     if (stars.findIndex(star => star === false) === -1) {
-      console.log('curr rate', 5);
       return 5;
     }
     let rtg = stars.findIndex(star => star === false);
-    console.log('rating in get rating', rtg);
     setRating(rtg);
     return stars.findIndex(star => star === false)
   }
@@ -112,7 +105,6 @@ function ReviewFormModal({spotId}) {
         const backendErrors = {};
         backendErrors.message = err.message;
         setErrors(err.errors);
-        console.log(err.errors, err.message, 'testing errs')
       } else {
         closeModal();
         await dispatch(getSpotReviewsThunk(spotId));

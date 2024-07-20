@@ -22,6 +22,21 @@
   font-weight: bold;
 }
 
+.disabled-signup-submit {
+  margin-top: 1rem;
+  height: 4rem;
+  width: 100%;
+  cursor: default;
+  background-color: #364f63;
+  color: #4a6983;
+  letter-spacing: .1rem;
+  border: none;
+  border-radius: .25rem;
+  font-size: 1rem;
+  font-family: 'Roboto', sans-serif;
+  font-weight: bold;
+}
+
 .signup-submit:hover {
   background-color: #1883dc;
 }
