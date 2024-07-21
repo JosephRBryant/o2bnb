@@ -32,7 +32,7 @@ function UpdateSpot() {
     if (!isLoaded) {
       getData()
     }
-  },[dispatch, spotId]);
+  },[dispatch, isLoaded, spotId]);
 
   useEffect(() => {
     if (isLoaded && spotDetails) {
