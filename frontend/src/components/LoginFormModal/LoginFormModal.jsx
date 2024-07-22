@@ -49,8 +49,6 @@ function LoginFormModal() {
     setIsSubmitDisabled(e.target.value.length < 6 || credential.length < 4)
   }
 
-  console.log('login errors', errors);
-
   return (
     <div className="login-form">
       <h1 className="login-header">Log in</h1>
@@ -73,7 +71,11 @@ function LoginFormModal() {
           required
         />
         {errors.credential && <p>{errors.credential}</p>}
-        <button className='login-submit' type="submit" disabled={isSubmitDisabled}>Log In</button>
+        <button
+        className={isSubmitDisabled ? 'disabled-login-submit' : 'login-submit'}
+        type="submit"
+        disabled={isSubmitDisabled}
+        >Log In</button>
         <a onClick={demoUser} className='demo-user'>Log in as Demo User</a>
       </form>
     </div>

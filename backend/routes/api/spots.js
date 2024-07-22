@@ -227,9 +227,6 @@ router.get('/current', requireAuth, handleValidationErrors, async (req, res, nex
       })
     })
 
-    if(!spots || spots.length === 0) {
-      res.status(404).json({message: 'User owns no spots'});
-    }
     res.json({"Spots": spots});
   } catch (error) {
     error.status = 404;

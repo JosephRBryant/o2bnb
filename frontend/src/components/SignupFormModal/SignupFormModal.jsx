@@ -31,6 +31,7 @@ function SignupFormModal() {
     .then(closeModal)
     .catch(async (res) => {
       const data = await res.json();
+      console.log('data from submit', data);
       if (data?.errors) {
         setErrors(data.errors)
       }
@@ -59,11 +60,10 @@ function SignupFormModal() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Email"
-            // required
           />
         <div className="label-error">
           <label htmlFor="username">Username</label>
-          {errors.firstName && <p>{errors.username}</p>}
+          {<p>{errors.username}</p>}
         </div>
         <input
             type="text"
@@ -72,7 +72,6 @@ function SignupFormModal() {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             placeholder="Username"
-            // required
           />
         <div className="label-error">
           <label htmlFor="first-name">First Name</label>
@@ -85,7 +84,6 @@ function SignupFormModal() {
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
             placeholder="First Name"
-            // required
           />
         <div className="label-error">
           <label htmlFor="last-name">Last Name</label>
@@ -98,7 +96,6 @@ function SignupFormModal() {
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
             placeholder="Last Name"
-            // required
           />
         <div className="label-error">
           <label htmlFor="password">Password</label>
@@ -111,7 +108,6 @@ function SignupFormModal() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
-            // required
           />
         <div className="label-error">
           <label htmlFor="confirm-password">Confirm Password</label>
@@ -124,7 +120,6 @@ function SignupFormModal() {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             placeholder="Confirm Password"
-            // required
           />
         <button className={(areFieldsEmpty() || username.length < 4 || password.length < 6 || password !== confirmPassword) ? "disabled-signup-submit disabled" : "signup-submit"} type="submit" disabled={areFieldsEmpty() || username.length < 4 || password.length < 6 || password !== confirmPassword}>Sign Up</button>
       </form>
