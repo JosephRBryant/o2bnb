@@ -109,9 +109,7 @@ const reviewsReducer = (state = initialState, action) => {
       return newState;
     case POST_REVIEW:
       newState = {...state};
-      console.log('action payload', action.payload.review);
       newState.spotReviews.Reviews = [action.payload, ...newState.spotReviews.Reviews];
-      console.log('spot reviews', state.spotReviews.Reviews);
       newState.byId = {...newState.byId, [action.payload.id]: action.payload};
       return newState;
     default:

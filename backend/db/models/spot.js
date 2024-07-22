@@ -198,7 +198,6 @@ module.exports = (sequelize, DataTypes) => {
           } else if (Number(value)) {
             throw new Error('Description must be letters')
           } else if (value.length < 30) {
-            console.log(value.length);
             throw new Error('Description must be 30 characters or more')
           }
         },
