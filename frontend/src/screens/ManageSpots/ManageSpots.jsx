@@ -44,9 +44,9 @@ const ManageSpot = () => {
     <main className='manage-spots-main'>
       <header className='manage-spots-header'>
         <h1>Manage your Spots</h1>
-        <Link className="create-new-spot" onClick={goToCreateSpot}>Create a New Spot</Link>
+        <Link className={userSpots.length === 0 ? "create-new-spot" : 'create-new-spot hidden'} onClick={goToCreateSpot}>Create a New Spot</Link>
       </header>
-      <div className='manage-spots'>
+      <div className={userSpots.length !== 0 ? 'manage-spots' : 'manage-spots hidden'}>
         {userSpots.map((spot, idx) => (
           <div key={`${idx}-${spot.name}`} className="spot-tile" data-tooltip={spot.name}>
             <SpotTile spot={spot}/>

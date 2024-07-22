@@ -84,7 +84,6 @@ export const getUserSpotsThunk = (userId) => async (dispatch) => {
     const res = await csrfFetch(`/api/spots/current`);
     if (res.ok) {
       const data = await res.json();
-      console.log('user spots', data);
       await dispatch(getUserSpots(data))
     } else {
       throw res
@@ -117,7 +116,6 @@ export const createSpotThunk = (spotForm) => async (dispatch) => {
 
     for (let data in spotData) {
       if (data === undefined || data === '') {
-        console.log('data missing or undefined', data);
         delete spotData[data]
       }
     }
@@ -169,7 +167,7 @@ export const deleteSpotThunk = (spot) => async (dispatch) => {
 export const updateSpotThunk = (spotForm, spotId) => async (dispatch) => {
   try {
     const {address, city, state, country, lat, lng, name, description, price} = spotForm;
-    console.log('spotform in thunk', address);
+
     const spotData = {
       address,
       city,
@@ -179,21 +177,9 @@ export const updateSpotThunk = (spotForm, spotId) => async (dispatch) => {
       lng,
       name,
       description,
-      price,
-      // previewImage,
-      // imageA,
-      // imageB,
-      // imageC,
-      // imageD
+      price
     }
 
-    // for (let data in spotData) {
-    //   if (spotData[data] === undefined || spotData[data] === '') {
-    //     console.log('data missing or undefined', data);
-    //     delete spotData[data]
-    //   }
-    // }
-    console.log('spotData in thunk after delete', typeof spotData);
     const options = {
       method: 'PUT',
       headers: {'Content-Type': 'application/json'},

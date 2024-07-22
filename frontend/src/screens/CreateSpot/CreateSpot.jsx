@@ -153,7 +153,7 @@ function CreateSpot() {
               <label htmlFor="lat">Latitude</label>
               <p>{errors.lat}</p>
             </div>
-            <input type="text" name="lat" id="lat" onChange={(e) => updateSpotForm(e, 'lat')} value={spotForm.lat} placeholder="Latitude" />
+            <input type="text" name="lat" id="lat" onChange={(e) => updateSpotForm(e, 'lat')} value={spotForm.lat} placeholder="Latitude, e.g. 12.1234567" />
           </div>
             <span className="form-comma">,</span>
           <div className="form-lng">
@@ -161,7 +161,7 @@ function CreateSpot() {
               <label htmlFor="lng">Longitude</label>
               <p>{errors.lng}</p>
             </div>
-            <input type="text" name="lng" id="lng" onChange={(e) => updateSpotForm(e, 'lng')} value={spotForm.lng} placeholder="Longitude" />
+            <input type="text" name="lng" id="lng" onChange={(e) => updateSpotForm(e, 'lng')} value={spotForm.lng} placeholder="Longitude, e.g. -123.1234567" />
           </div>
         </div>
         <div className="form-description">
@@ -170,14 +170,14 @@ function CreateSpot() {
             <p>{errors.description}</p>
           </div>
           <p className='sub-header'>Mention the best features of your space, only special amenities like fast wifi or parking, and what you love about the neighborhood.</p>
-          <textarea name="description" id="description" onChange={(e) => updateSpotForm(e, 'description')} value={spotForm.description} placeholder="Description"></textarea>
+          <textarea name="description" id="description" onChange={(e) => updateSpotForm(e, 'description')} value={spotForm.description} placeholder="Please write at least 30 characters"></textarea>
         </div>
         <div className="form-title">
           <div className="label-error">
             <h2>Create a title for your spot</h2>
             <p>{errors.name}</p>
           </div>
-          <p className='sub-header'>Catch a guest&apos;s attention with a spot title that highlights what makes your place special.</p>
+          <p className='sub-header'>Catch guests&apos; attention with a spot title that highlights what makes your place special.</p>
           <input type="text" name="name" id="name" onChange={(e) => updateSpotForm(e, 'name')} value={spotForm.name} placeholder="Name of your spot" />
         </div>
         <div className="form-price">

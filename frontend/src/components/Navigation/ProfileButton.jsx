@@ -1,17 +1,19 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { FaUserCircle } from 'react-icons/fa';
 import { RxHamburgerMenu } from "react-icons/rx";
 import * as sessionActions from '../../store/session';
 import OpenModalMenuItem from './OpenModalMenuItem';
 import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
+import { getUserSpotsThunk } from '../../store/spots';
 import './ProfileButton.css';
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const sessionUser = useSelector(state => state.session.user)
   const [showMenu, setShowMenu] = useState(false);
   const ulRef = useRef();
 
@@ -35,8 +37,9 @@ function ProfileButton({ user }) {
     return () => document.removeEventListener('click', closeMenu);
   }, [showMenu]);
 
-  const goToManageSpots = (e) => {
+  const goToManageSpots = async (e) => {
     e.preventDefault();
+    await dispatch(getUserSpotsThunk(sessionUser.id))
     closeMenu();
     navigate('/spots/current');
   }
