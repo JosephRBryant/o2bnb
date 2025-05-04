@@ -29,6 +29,7 @@
   transition: .2s;
   position: relative;
   top: -30%;
+  border-radius: 10px;
 }
 
 .tool-tip-text::before {
