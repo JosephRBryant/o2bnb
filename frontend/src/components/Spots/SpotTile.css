@@ -45,7 +45,6 @@
   visibility: visible;
   opacity: 1;
   top: -35%;
-  border-radius: 10px;
 }
 
 .location-rating {
@@ -56,6 +55,7 @@
   font-family: 'Robot', sans-serif;
   font-size: .9rem;
   color: #222;
+  border-radius: 10px;
 }
 
 .star-rating {
